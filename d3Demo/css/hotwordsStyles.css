@@ -1,0 +1,122 @@
+﻿
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+    body{
+        font-size:12px;
+    }
+
+    .rootNode circle {
+        fill: #3d0f1c;
+        stroke: #df1717;
+        stroke-width: 2;
+    }
+
+    .rootNode text {
+        font-size: 22px;
+        fill: white;
+    }
+
+    .peoNode circle {
+        fill: none;
+        stroke: #455eba;
+        stroke-width: 1;
+    }
+
+    .peoNode text {
+        font-size: 10px;
+        fill: #455eba;
+    }
+
+    .comNode circle {
+        fill: none;
+        stroke: #01b5e8;
+        stroke-width: 1;
+    }
+
+    .comNode text {
+        font-size: 10px;
+        fill: #01b5e8;
+    }
+
+    .areaNode circle {
+        fill: none;
+        stroke: #01f1f0;
+        stroke-width: 1;
+    }
+
+    .areaNode text {
+        font-size: 10px;
+        fill: #01f1f0;
+    }
+
+    .areaChild circle, .peoChild circle, .comChild circle {
+        fill: white;
+        fill-opacity: 0;
+    }
+
+    .partTitle
+    {
+        color:#fff;
+        padding-left:12px;
+    }
+
+    /*For Ring*/
+    #ringTop {
+            display: block;
+            margin-bottom: -12px;
+        }
+
+        #ringContainer {
+            width: 260px;
+            height: 120px;
+            margin-left: 560px;
+            margin-top: 20px;
+            background-color: transparent;
+            color: #fff;
+            font-size: 12px;
+        }
+    /*End For Ring*/
+     
+    /*For Line Chart*/
+    #linechart .axis {
+            display: none;
+        }
+
+            #linechart .axis path,
+            #linechart .axis line {
+                fill: none;
+                stroke: black;
+                shape-rendering: crispEdges;
+            }
+
+             #linechart .axis text {
+                font-family: sans-serif;
+                font-size: 11px;
+            }
+
+         #linechart .p {
+            z-index: 99999;
+        }
+    /*End For Line Chart*/
+
+
+    /*For Bar Chart*/
+    #barchart text {
+        font-family: Tahoma;
+        font-size: 12px;
+        color:#fff;
+    }
+
+    #barchart .rect {
+        fill: #fff;
+        stroke-width: 1;
+        /*font-weight: bold;*/
+        /*stroke:red;*/
+    }
+
+    #barchart.tick line, #barchart path, #barchart .xaxis {
+        display: none;
+    }
+    /*End For Bar Chart*/
