@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script type="text/javascript">
+        var comData = {
+            width: 1274,
+            height: 310,
+            yLine: [0, 40, 94, 148, 202, 256, 310],
+            xLine: [196, 392, 588, 784, 980, 1176],
+            yValue: [46.40, 46.55, 46.70, 46.85, 47.00],
+        };
+
+        $(function () {
+            var jsonData = [{ "P": 46.87, "T": 7746330 }, { "P": 46.815, "T": 5 }, { "P": 46.81, "T": 10 }, { "P": 46.7947, "T": 15 },
+                        { "P": 46.87, "T": 20 }, { "P": 46.96, "T": 25 }, { "P": 46.9, "T": 30 }, { "P": 46.89, "T": 35 }, { "P": 46.91, "T": 40 },
+                        { "P": 46.81, "T": 45 }, { "P": 46.911, "T": 50 }, { "P": 46.9201, "T": 55 }, { "P": 46.84, "T": 60 }, { "P": 46.84, "T": 65 },
+                        { "P": 46.77, "T": 70 }, { "P": 46.855, "T": 75 }, { "P": 46.85, "T": 80 }, { "P": 46.88, "T": 85 }, { "P": 46.87, "T": 90 },
+                        { "P": 46.87, "T": 95 }, { "P": 46.84, "T": 100 }, { "P": 46.87, "T": 105 }, { "P": 46.881, "T": 110 }, { "P": 46.86, "T": 115 },
+                        { "P": 46.845, "T": 120 }, { "P": 46.84, "T": 125 }, { "P": 46.85, "T": 130 }, { "P": 46.86, "T": 135 }, { "P": 46.845, "T": 140 },
+                        { "P": 46.84, "T": 145 }, { "P": 46.875, "T": 150 }, { "P": 46.86, "T": 155 }, { "P": 46.845, "T": 160 }, { "P": 46.82, "T": 165 },
+                        { "P": 46.815, "T": 170 }, { "P": 46.75, "T": 175 }, { "P": 46.74, "T": 180 }, { "P": 46.7, "T": 185 }, { "P": 46.72, "T": 190 },
+                        { "P": 46.7331, "T": 195 }, { "P": 46.725, "T": 200 }, { "P": 46.675, "T": 205 }, { "P": 46.6963, "T": 210 }, { "P": 46.69, "T": 215 },
+                        { "P": 46.68, "T": 220 }, { "P": 46.69, "T": 225 }, { "P": 46.73, "T": 230 }, { "P": 46.7659, "T": 235 }, { "P": 46.73, "T": 240 },
+                        { "P": 46.75, "T": 245 }, { "P": 46.74, "T": 250 }, { "P": 46.74, "T": 255 }, { "P": 46.68, "T": 260 }, { "P": 46.72, "T": 265 },
+                        { "P": 46.72, "T": 270 }, { "P": 46.745, "T": 275 }, { "P": 46.74, "T": 280 }, { "P": 46.73, "T": 285 }, { "P": 46.72, "T": 290 },
+                        { "P": 46.685, "T": 295 }, { "P": 46.695, "T": 300 }, { "P": 46.685, "T": 305 }, { "P": 46.695, "T": 310 }, { "P": 46.655, "T": 315 },
+                        { "P": 46.595, "T": 320 }, { "P": 46.6, "T": 325 }, { "P": 46.61, "T": 330 }, { "P": 46.565, "T": 335 }, { "P": 46.58, "T": 340 },
+                        { "P": 46.535, "T": 345 }, { "P": 46.499, "T": 350 }, { "P": 46.59, "T": 355 }, { "P": 46.62, "T": 360 }, { "P": 46.64, "T": 365 },
+                        { "P": 46.665, "T": 370 }, { "P": 46.63, "T": 375 }, { "P": 46.64, "T": 380 }, { "P": 46.62, "T": 385 }, { "P": 46.56, "T": 390 }];
+            var xStart = 0;
+            var yStart = comData.yLine[comData.yLine.length - 1];
+            var xLength = comData.xLine[1] - comData.xLine[0];
+            var yLength = comData.yLine[2] - comData.yLine[1];
+            var xScale = parseFloat(xLength / 12).toFixed(2);
+            var yScale = parseFloat(yLength / (comData.yValue[1] - comData.yValue[0])).toFixed(2);
+
+            var svg = makeSVG("svg", { width: comData.width, height: comData.height });
+
+            var g = makeSVG("g",null);
+            var rect = makeSVG("rect", {x:0,y:0,width:comData.width,height:comData.height,fill:"#f1f1f1"}); 
+            g.appendChild(rect);
+
+            for (var i = 0; i < comData.yLine.length; i++) {
+                var line = makeSVG("line", { x1: xStart, y1: comData.yLine[i], x2: comData.width, y2: comData.yLine[i], stroke: "gray", "stroke-width": 1 });
+                g.appendChild(line);
+            }
+            //时间数组[10:30,11:30,12:30,13:30,14:30,15:30]
+            var txt = createDateArry(jsonData[0].T, comData.xLine.length, 1);
+            for (var i = 0; i < comData.xLine.length; i++) {
+                var text = makeSVG("text", {x:(comData.xLine[i]-15),y:(comData.yLine[1]-10),"font-size":12,fill:"gray"}); 
+                text.textContent = txt[i];
+                g.appendChild(text);
+            }
+
+            //拼接path的路径
+            //var d = "M" + (-10) + "," + yStart;
+            //var data = [];
+            //for (var i = 0; i < jsonData.length; i++) {
+            //    var x = (parseFloat(xStart + xScale * i)).toFixed(2);
+            //    var y = yStart - parseFloat((jsonData[i].P - comData.yValue[0]) * yScale).toFixed(2);
+            //    d = d + "L" + x + "," + y;
+            //    data[i] = parseInt(x);
+            //}
+            //d = d + "L" + (comData.width + 10) + "," + yStart + "Z";
+
+            var d = "M0," + yStart;
+            var data = [];
+            for (var i = 0; i < jsonData.length; i++) {
+                var x = (parseFloat(xStart + xScale * i)).toFixed(2);
+                var y = yStart - parseFloat((jsonData[i].P - comData.yValue[0]) * yScale).toFixed(2);
+                d = d + "L" + x + "," + y;
+                data[i] = parseInt(x);
+            }
+            d = d + "L" + comData.width + "," + yStart + "Z";
+
+            var d1 = "M";
+            for (var i = 0; i < jsonData.length; i++) {
+                var x = (parseFloat(xStart + xScale * i)).toFixed(2);
+                var y = yStart - parseFloat((jsonData[i].P - comData.yValue[0]) * yScale).toFixed(2);
+                d1 = d1 +  x + "," + y+"L";
+            }
+            d1=d1.substring(0,d1.length-1);
+            
+            var gPath = makeSVG("g", {id:"gPath"});
+            //var path = makeSVG("path", { d: d, fill: "#D2E7EA", stroke: "#1A86AA", "stroke-width": 2, "fill-opacity": "0.7" });
+            var path = makeSVG("path", { d: d1, fill: "none", stroke: "#1A86AA", "stroke-width": 2, "fill-opacity": "0.7" });
+            var path1 = makeSVG("path", { d: d, fill: "#D2E7EA", "fill-opacity": "0.7" });
+            gPath.appendChild(path1);
+            gPath.appendChild(path);
+
+
+            var tarLine = makeSVG("line", { x1: 0, y1: (comData.yLine[1] + 35), x2: 0, y2: comData.height, stroke: "gray", "stroke-width": "0.3", display: "none" });
+            var tarCircle = makeSVG("circle", { cx: 0, cy: 0, r: 5, fill: "#3ab161", stroke: "white", "stroke-width": 2, display: "none" }); 
+            gPath.appendChild(tarLine).parentNode.appendChild(tarCircle);
+
+
+            var showRect = makeSVG("rect", { x: 10, y: comData.yLine[1], width: 80, height: 35, fill: "white", stroke: "black", "stroke-width": "0.8", display: "none" }); 
+            var showText = makeSVG("text", { x: 20, y: (comData.yLine[1] + 20), "font-size": 14, fill: "black", display: "none" }); 
+            g.appendChild(showRect).parentNode.appendChild(showText);
+
+            for (var i = 0; i < comData.yValue.length; i++) {
+                var text = makeSVG("text", { x: comData.width - 35, y: comData.yLine[i + 2] - 5, "font-size": 12, fill: "gray" });
+                text.textContent = comData.yValue[comData.yValue.length - 1 - i].toFixed(2);
+                g.appendChild(text);
+            }
+
+
+            g.appendChild(gPath);
+            svg.appendChild(g);
+            $("#div1").append(svg);
+
+
+            $("#gPath").mousemove(function (e) {
+                var rect = svg.getBoundingClientRect();
+                var x = parseInt(e.clientX - rect.left);
+                var average = parseInt(xScale / 2);
+                for (var i = (x - average) ; i <= (x + average) ; i++) {
+                    if (data.indexOf(i) != -1) {
+                        var y = jsonData[data.indexOf(i)].P;
+                        var rectX = ((i - 40) < 0) ? 0 : ((i + 40) > comData.width) ? (comData.width - 80) : (i - 40);
+                        showRect.setAttribute("display", "block");
+                        showRect.setAttribute("x", rectX);
+                        showText.setAttribute("display", "block");
+                        showText.setAttribute("x", rectX + 20);
+                        showText.textContent = y;
+                        tarLine.setAttribute("display", "block");
+                        tarLine.setAttribute("x1", i);
+                        tarLine.setAttribute("x2", i);
+                        var circleCY = yStart - parseFloat((jsonData[data.indexOf(i)].P - 46.40) * yScale).toFixed(2) + 3;
+                        tarCircle.setAttribute("display", "block");
+                        tarCircle.setAttribute("cx", i);
+                        tarCircle.setAttribute("cy", circleCY);
+                    }
+                }
+            }).mouseout(function () {
+                showRect.setAttribute("display", "none");
+                showText.setAttribute("display", "none");
+                tarCircle.setAttribute("display", "none");
+                tarLine.setAttribute("display", "none");
+            });
+        })
+        function createDateArry(Ns, length, interval) {
+            //设置横坐标值
+            var txt = [];
+            var startDate = getTime(Ns);
+            for (var i = 0; i < length; i++) {
+                startDate = addHours(startDate, interval);
+                arr = startDate.toString().split(" ");
+                txt[i] = arr[4].substring(0, 5);
+            }
+            return txt;
+        }
+        function addHours(date, hours) {
+            return new Date(date.setHours(date.getHours() + hours));
+        }
+        function getTime(nS) {
+            var date = new Date(1970, 0, 01);
+            return new Date(date.setMilliseconds(date.getMilliseconds() + parseFloat(nS) * 60 * 1000 + 946684800000));
+        }
+        function makeSVG(tag, attrs) {
+            var svgElement = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (var k in attrs)
+                svgElement.setAttribute(k, attrs[k]);
+            return svgElement;
+        }
+    </script>
+</head>
+<body>
+    <a href="index.html">返回</a>
+    <div id="div1" style="margin-top:100px;">
+    </div>
+</body>
+</html>

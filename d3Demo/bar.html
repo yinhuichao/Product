@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>简单柱状图</title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/d3.js"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/ircharts.js"></script>
+    <script>
+        $(function () {
+            IR.ChartView({
+                chartType: "bar",
+                renderTo: "div1",
+                title: "REVENUE",
+                subTitle: "(In billions)",
+                width: 400,
+                height: 320,
+                bar1Label: "Quarterly",
+                bar2Label: "Annual",
+                precision: 1, //精度，保留小数位数
+                annualScale: [30, 20, 10, 0],
+                quarterlyScale: [90, 60, 30, 0],
+                annualText: ["FY12", "FY13", "FY14"],
+                quarterlyText: ["Q413", "Q114", "Q214", "Q314", "Q414"],
+                annualValue: [19.9, 18.5, 24.5],
+                quarterlyValue: [73.3, 88.6, 45.6, 60.0, 23.4]
+            });
+
+        })
+    </script>
+</head>
+<body style="background-color: darkgreen; font-family: 'Segoe UI';">
+    <a href="index.html" style="color:white;">返回</a><br />
+    <div id="div1"></div>
+</body>
+</html>

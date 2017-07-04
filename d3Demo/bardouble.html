@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>双柱图</title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/d3.js"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/ircharts.js"></script>
+    <script>
+        $(function () {
+            IR.ChartView({
+                chartType: "bardouble",
+                renderTo: "div1",
+                title: "SEGMENT GROSS MARGIN",
+                subTitle: "(In billions)",
+                width: 500,
+                height: 400,
+                barLineHeight: 30,
+                footHeight: 98,
+                bar1Label: "Quarterly",
+                bar2Label: "Annual",
+                precision: 1, //精度，保留小数位数
+                annualScale: [42,28,14,0],
+                quarterlyScale: [12,6,0,-6],
+                annualText: ["FY13 FY14", "FY13 FY14", "FY13 FY14", "FY13 FY14", "FY13 FY14", "FY13 FY14"],
+                quarterlyText: ["Q413 Q414", "Q413 Q414", "Q413 Q414", "Q413 Q414", "Q413 Q414", "Q413 Q414"],
+                annualValue: [17.0,17.2,1.0,0.9,0.0,0.1,2.0,1.8,36.3,38.6,0.9,1.9],
+                quarterlyValue: [-5,4.4,-0.6,0.0,0.0,0.1,0.4,0.4,9.7,10.3,0.3,0.7]
+            });
+        })
+    </script>
+</head>
+<body style="background-color: darkgreen; font-family: 'Segoe UI';">
+    <a href="index.html" style="color:white;">返回</a><br />
+    <div id="div1"></div>
+</body>
+</html>

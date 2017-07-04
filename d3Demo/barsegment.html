@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>分段柱状图</title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/d3.js"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/ircharts.js"></script>
+    <script>
+        $(function () {
+            IR.ChartView({
+                chartType: "barsegment",
+                renderTo: "div1",
+                title: "RETURN OF CASH TO SHAREHOLDERS",
+                subTitle: "(In billions except for Dividends Per Share)",
+                width: 400,
+                height: 420,
+                xLineCount:4,
+                titleHeight: 35,
+                barHeight: 22,
+                footHeight: 157,
+                barLineHeight: 46,
+                bar1Label: "Quarterly",
+                bar2Label: "Year To Date",
+                annualScale: [8, 6, 4, 2, 0],
+                annualScale1:[0.32,0.24,0.16,0.08,0.00],
+                quarterlyScale: [8, 6, 4, 2, 0],
+                quarterlyScale1: [0.00, 0.08, 0.16, 0.24, 0.32],
+                annualText: ["FY14","FY15"],
+                quarterlyText: ["Q114","Q214","Q314","Q414","Q115"],
+                annualValue: [2.332,2.559],
+                annualValue1: [1.500, 2.000],
+                annualValue2:[0.28,0.31],
+                quarterlyValue: [2.332, 2.322, 2.309, 2.307, 2.559],
+                quarterlyValue1: [1.500, 2.000, 1.791, 1.118, 2.000],
+                quarterlyValue2:[0.28,0.28,0.28,0.28,0.31]
+            });
+        })
+    </script>
+</head>
+<body style="background-color: darkgreen; font-family: 'Segoe UI';">
+    <a href="index.html" style="color:white;">返回</a><br />
+    <div id="div1"></div>
+</body>
+</html>

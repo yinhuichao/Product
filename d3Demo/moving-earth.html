@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/d3.js"></script>
+    <script src="./js/earth.js"></script>
+    <style>
+        .map_path {
+            stroke: black;
+            stroke-width: 1;
+        }
+
+        .grid_path {
+            stroke: gray;
+            stroke-width: 1;
+            fill: white;
+            opacity: 1;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        .glass {
+            background-color: transparent;
+            -webkit-box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            -moz-box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            z-index: 10;
+            position: absolute;
+            display: block;
+        }
+    </style>
+    <script>
+        jQuery.extend(jQuery.easing,
+        {
+            easeInOutQuad: function (x, t, b, c, d) {
+                if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+                return -c / 2 * ((--t) * (t - 2) - 1) + b;
+            }
+        });
+        $(function () {
+            var width = 1200;
+            var height = 450;
+            var speed = 0.02;
+            var sens = 0.25;
+            var startTime = Date.now();
+            var currentTime = Date.now();
+            var num = 11;
+            var yData = [[23.76, 23.70, 22.29, 21.38, 24.20, 22.43, 23.75, 22.63, 23.22, 22.20],
+                         [15.76, 15.70, 14.29, 13.38, 16.20, 14.43, 15.75, 14.63, 15.22, 14.20]];
+            var dataset = [];
+            var barData = [];
+            var clickFlag = false;
+            var curPath = null;
+
+            //var xAxisScale = d3.scale.ordinal()
+            //			    .domain(9)
+            //			    .rangeRoundBands([550, 1150]);
+            var xScale = d3.scale.linear()
+                           .domain([0, num - 1])
+                           .range([550, 1150]);
+
+            var yAxisScale = d3.scale.linear()
+                            .domain([0, 30])
+                            .range([350, 80]);
+
+            var xAxis = d3.svg.axis()
+						.scale(xScale)
+						.orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                            .scale(yAxisScale)
+                            .orient("left");
+
+
+
+            var line = d3.svg.line()
+                        .x(function (d, i) { return d.x; })
+                        .y(function (d, i) { return d.y; });
+
+            for (var i = 0; i < num - 1 ; i++) {
+                var tempnum = Math.floor(Math.random() * 10 + 20);   // 返回 0~29的整数
+                var _y = yAxisScale(yData[0][i]);
+                var _x = xScale(i) + 30;
+                dataset.push({ x: _x, y: _y });
+                _y = yAxisScale(yData[1][i]);
+                _x = xScale(i) + 20;
+                barData.push({ x: _x, y: _y });
+
+            }
+
+
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+            svg.append("rect").attr("x", 0).attr("y", 0).attr("height", height).attr("width", width).attr("stroke", "gray").attr("fill", "white");
+
+            //orthographic球状的投影函数（还有其他很多投影函数，比如平面的等）
+            var projection = d3.geo.orthographic()
+                                .scale(200).rotate([0, -10, 20]).clipAngle(90);
+
+            var graticule = d3.geo.graticule();
+
+            //路径函数d3.geo.path()，将投影函数作为参数传入，path函数对其进行投影变换
+            var path = d3.geo.path()
+                            .projection(projection);
+
+            //随机颜色
+            var color = d3.scale.category20();
+
+            svg.append("text")
+                .attr("id", "loading")
+                .attr("x", width / 2)
+                .attr("y", height / 2)
+                .text("Now Loading...");
+
+
+            var root = getData();
+            var grid = graticule();
+            console.log(grid);
+
+
+            var map = svg.append("g")
+                         .attr("transform", "translate(" + -230 + "," + -20 + ")").attr("cursor", "pointer");
+            var gData = svg.append("g");
+            var gLines = gData.append("g").attr("class", "gLines");
+            var gPoints = gData.append("g").attr("class", "gPoints").attr("transform", "translate(0,-25)").attr("display", "none");
+            var gBars = gData.append("g").attr("class", "gBars");
+            var gSlider = gData.append("g").attr("class", "gSlider");
+
+
+            var linePath = gLines.append("path").datum(dataset).attr("d", line)
+                        .attr("fill", "none")
+                        .attr("stroke", "rgb(127,186,0)")
+                        .attr("stroke-width", 6)
+                        .attr("display", "none");
+            var points = gPoints.selectAll("circle").data(dataset).enter().append("circle")
+                        .attr("cx", function (d, i) { return d.x; })
+                        .attr("cy", function (d, i) { return d.y; })
+                        .attr("r", 8).attr("fill", "rgb(127,186,0)")
+                        .on("mouseover", function () {
+                            d3.select(this).attr("r", 12);
+
+                            var _x = parseInt(d3.select(this).attr("cx")) - 20;
+                            var _y = parseInt(d3.select(this).attr("cy")) - 35;
+                            showRect.attr("display", "block").attr("x", _x).attr("y", _y).attr("stroke", "rgb(127,186,0)");
+                            showText.attr("display", "block").attr("x", _x + 22).attr("y", _y + 15);
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this).attr("r", 8);
+                            showRect.attr("display", "none");
+                            showText.attr("display", "none");
+                        });
+            var bars = gBars.selectAll("rect").data(barData).enter().append("rect")
+                        .attr("x", function (d, i) { return d.x; })
+                        .attr("y", function (d, i) { return 350; })
+                        .attr("width", 25)
+                        .attr("height", 0)
+                        .attr("fill", "#00b193")
+                        .on("mouseover", function () {
+                            var _x = parseInt(d3.select(this).attr("x")) - 10;
+                            var _y = parseInt(d3.select(this).attr("y")) - 30;
+                            d3.select(this).attr("fill", "#008e76");
+                            showRect.attr("display", "block").attr("x", _x).attr("y", _y).attr("stroke", "#00b193");
+                            showText.attr("display", "block").attr("x", _x + 22).attr("y", _y + 15);
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this).attr("fill", "#00b193");
+                            showRect.attr("display", "none");
+                            showText.attr("display", "none");
+                        });
+            //slider
+            var gSliRects = gSlider.append("g");
+            var rects = gSliRects.selectAll("rect").data(dataset).enter().append("rect")
+                        .attr("x", function (d, i) { return d.x - 30; })
+                        .attr("y", 40)
+                        .attr("width", xScale(1) - xScale(0))
+                        .attr("height", 30)
+                        .attr("fill", "white")
+                        .on("click", function () {
+                            var _x = d3.select(this).attr("x");
+                            tarRect.transition().duration(200).attr("x", _x);
+                            text.transition().duration(200).attr("x", parseInt(_x) + 13);
+                            d3.select("#glass").transition().duration(200).style("left", $(this).position().left + 3 + "px");
+
+                        });
+
+            var gSliBar = gSlider.append("g").attr("pointer-events", "none");
+            var bar = gSliBar.append("rect").attr("x", 550).attr("y", 50)
+                        .attr("width", 600).attr("height", 10).attr("fill", "#fdfdfd").attr("stroke", "gray").attr("stroke-width", 0.5);
+
+            var gTarRect = gSlider.append("g").attr("cursor", "pointer");
+            var tarRect = gTarRect.append("rect").attr("x", 550).attr("y", 40)
+                        .attr("width", xScale(1) - xScale(0)).attr("height", 30)
+                        .attr("fill", "white").attr("stroke", "gray").attr("stroke-width", 0.5);
+            var text = gTarRect.append("text").attr("x", 563).attr("y", 60).text("2005").attr("pointer-events", "none");
+
+
+            //console.info(transPosX);
+            var dragListener = d3.behavior.drag()
+                .on("drag", function () {
+                    var x = parseInt(d3.event.x);
+                    if (x > 550 && x < 1090) {
+                        tarRect.attr("x", x);
+                        text.attr("x", x + 13);
+                        d3.select("#glass").style("left", $(tarRect.node()).position().left + 3 + "px");
+                    }
+                });
+            tarRect.call(dragListener)
+
+            map.append("path")
+                .datum(grid)
+                .attr("id", "grid_id")
+                .attr("class", "grid_path")
+                .attr("d", path)
+                .call(
+                    d3.behavior.drag()
+                        .origin(function () { var r = projection.rotate(); return { x: r[0] / sens }; })
+                        .on("drag", function () {
+                            var rotate = projection.rotate();
+                            projection.rotate([d3.event.x * sens, rotate[1], rotate[2]]);
+                            map.select("#grid_id").attr("d", path);
+                            map.selectAll(".map_path").attr("d", path);
+                        })
+                );
+
+            map.selectAll(".map_path")
+                    .data(root.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "map_path")
+                    .attr("fill", function (d, i) {
+                        return color(i);
+                    })
+                    .attr("d", path)
+                    .on("mouseover", function (d, i) {
+
+                    })
+                    .on("mouseout", function (d, i) {
+
+                    })
+                    .on("click", function (d, i) {
+                        map.selectAll(".map_path").attr("fill", function (d, i) { return color(i); });
+                        d3.select(this)
+                            .attr("fill", "yellow");
+                        var totalLength = gLines.select("path").node().getTotalLength();
+                        linePath.attr("display", "block").attr("stroke-dashoffset", totalLength)
+                                    .attr("stroke-dasharray", totalLength + " " + totalLength)
+                                    .transition().duration(800).ease("easeInOutQuad")
+                                    .attr("stroke-dashoffset", 0);
+                        gPoints.attr("display", "none").attr("transform", "translate(0,-25)").transition().duration(200).delay(800).ease("linear")
+                            .attr("display", "block").attr("transform", "translate(0,0)");
+                        gBars.selectAll("rect")
+                                .attr("y", 350)
+                                .attr("height", 0)
+                                .transition().duration(1000).delay(1000).ease("linear")
+                                .attr("y", function (d, i) { return d.y; }).attr("height", function (d, i) { return 350 - d.y; });
+
+                    })
+                    .call(
+                        d3.behavior.drag()
+                          .origin(function () { var r = projection.rotate(); return { x: r[0] / sens }; })
+                          .on("drag", function () {
+                              var rotate = projection.rotate();
+                              projection.rotate([d3.event.x * sens, rotate[1], rotate[2]]);
+                              map.select("#grid_id").attr("d", path);
+                              map.selectAll(".map_path").attr("d", path);
+                          })
+                    );
+
+            svg.select("#loading")
+                .attr("opacity", 0);
+
+            //d3.timer(function () {
+
+            //    currentTime = Date.now();
+
+            //    projection.rotate([speed * (currentTime - startTime), -10,20]).clipAngle(90);
+
+            //    map.select("#grid_id")
+            //        .attr("d", path);
+
+            //    map.selectAll(".map_path")
+            //        .attr("d", path);
+            //});
+
+
+            gData.append("g")
+			.attr("class", "axis xAxis")
+			.attr("transform", "translate(0,350)")
+			.call(xAxis);
+
+            gData.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(550,0)")
+                .call(yAxis);
+            gData.select(".xAxis").selectAll("text").data([2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]).text(function (d, i) { return d; });
+            gData.append("text").text("各省人口增长情况").attr("x", 520).attr("y", 30);
+
+            var showRect = svg.append("rect").attr("x", 10).attr("y", 10).attr("width", 45).attr("height", 20)
+                    .attr("fill", "white").attr("stroke", "#00b193")
+                    .attr("rx", 8).attr("ry", 8)
+                    .attr("display", "none");
+            var showText = svg.append("text").attr("x", 32).attr("y", 25).attr("text-anchor", "middle")
+                    .attr("font-size", 12).attr("font-weight", "bold").text("123.0")
+                    .attr("display", "none");
+
+        })
+
+    </script>
+</head>
+<body>
+    <div class="glass" id="glass" style="width: 54px; left: 561px; top: 79px; height: 350px; "></div>
+</body>
+</html>
