@@ -1,0 +1,836 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>热词</title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/spritespin.js"></script>
+    <script src="./js/d3.js"></script>
+    <script src="./data/data.js"></script>
+    <link rel="stylesheet" href="./css/hotwordsStyles.css">
+    <style type="text/css">
+        
+    </style>
+    <script>
+        $(function () {
+            //要绑定的数据
+            var root = jsonData;
+
+            //树状图布局
+            var tree = d3.layout.tree()
+                .size([360, 120])
+                .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+            //对角线生成器
+            var diagonal = d3.svg.diagonal.radial()
+                .projection(function (d) { return [d.y, d.x / 180 * Math.PI]; });
+
+            //目标g
+            var hotWord = d3.select("#svg1").select("#gMain").append("g");
+            var gLinks = hotWord.append("g").attr("class", "gLinks");
+            var gTar = hotWord.append("g").attr("class", "hotWord");
+            gTar.append("rect").attr("x", 0).attr("y", 0).attr("width", 820).attr("height", 620).attr("fill", "white").attr("fill-opacity", 0);
+
+
+
+            //timeBar click event
+            d3.select("#svg1").select("#timeBar").selectAll("circle").on("click", function () {
+                //调用入口函数
+                applyTree(root);
+                d3.select("#svg1").select("#timeBar").selectAll("circle").attr("fill", "#0e2944").attr("stroke", "#02acdf");
+                d3.select(this).attr("fill", "#3d0f1c").attr("stroke", "#e21617");
+            })
+
+            //调用入口函数
+            applyTree(root);
+
+            //Rang Control
+            (function () {
+                var settings = [[{ font: "地区", color: "#00FFFF" }, { font: "人物", color: "#445EBD" }, { font: "企业", color: "#03ADE0" }, { font: "关键词", color: "#E11516" }],
+                [{ font: "关键词", color: "#E11516" }, { font: "地区", color: "#00FFFF" }, { font: "人物", color: "#445EBD" }, { font: "企业", color: "#03ADE0" }],
+                [{ font: "企业", color: "#03ADE0" }, { font: "关键词", color: "#E11516" }, { font: "地区", color: "#00FFFF" }, { font: "人物", color: "#445EBD" }],
+                [{ font: "人物", color: "#445EBD" }, { font: "企业", color: "#03ADE0" }, { font: "关键词", color: "#E11516" }, { font: "地区", color: "#00FFFF" }]
+                ];
+
+                var frames = SpriteSpin.sourceArray('images/rad_zoom_{frame}.png', {
+                    frame: [1, 20],
+                    digits: 3
+                });
+
+                // these are the frame numbers that will show a detail bubble
+                var details = [0, 5, 10, 15];
+                // the current index in the details array
+                var detailIndex = 0;
+
+                // initialise spritespin
+                var spin = $('#spritespin');
+                spin.spritespin({
+                    source: frames,
+                    width: 160,
+                    sense: -1,
+                    height: 90,
+                    animate: false
+                });
+                // get the api object. This is used to trigger animation to play up to a specific frame
+                var api = spin.spritespin("api");
+
+                spin.bind("onLoad", function () {
+                    var data = api.data;
+                    data.stage.prepend($(".details .detail")); // add current details
+                    data.stage.find(".detail").hide();         // hide current details
+                }).bind("onFrame", function () {
+                    var data = api.data;
+                    data.stage.find(".detail:visible").stop(false).fadeOut();
+                    data.stage.find(".detail.detail-" + data.frame).stop(false).fadeIn();
+                });
+
+                //$("#next").click(function () {
+                //    changeFont(settings[detailIndex]);
+                //    setDetailIndex(detailIndex + 1);
+                //});
+
+                setInterval(function () {
+                    changeFont(settings[detailIndex]);
+                    setDetailIndex(detailIndex + 1);
+                    applyTree(root);
+                }, 10000)
+
+                function changeFont(setting) {
+                    $("#ringTop").text(setting[0].font);
+                    $("#ringTop").css("color", setting[0].color);
+
+                    $("#ringRight").text(setting[1].font);
+                    $("#ringRight").css("color", setting[1].color);
+
+                    $("#ringBottom").text(setting[2].font);
+                    $("#ringBottom").css("color", setting[2].color);
+
+                    $("#ringLeft").text(setting[3].font);
+                    $("#ringLeft").css("color", setting[3].color);
+                }
+
+                function setDetailIndex(index) {
+                    detailIndex = index;
+                    if (detailIndex < 0) {
+                        detailIndex = details.length - 1;
+                    }
+                    if (detailIndex >= details.length) {
+                        detailIndex = 0;
+                    }
+                    api.playTo(details[detailIndex]);
+                }
+            })();
+
+
+            //入口函数
+            function applyTree(root) {
+                gLinks.selectAll("path").remove();                               
+
+                gTar.selectAll("g").remove();
+                var gArray = [];
+                var count = root.length;
+                var timeDelay = root.length * 1000;
+
+                if (count == 3) {
+                    gArray.push(gTar.append("g").attr("transform", "translate(350,400)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(650,310) scale(0.8)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(110,270) scale(0.7)").attr("class", "gCenter"));
+                }
+                else if (count == 5) {
+                    gArray.push(gTar.append("g").attr("transform", "translate(320,400)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(650,290) scale(0.8)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(110,250) scale(0.7)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(580,515) scale(0.5)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(90,470) scale(0.4)").attr("class", "gCenter"));
+                }
+                else if (count == 9) {
+                    gArray.push(gTar.append("g").attr("transform", "translate(320,400)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(650,290) scale(0.8)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(108,260) scale(0.7)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(570,510) scale(0.5)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(90,470) scale(0.4)").attr("class", "gCenter"));
+
+                    gArray.push(gTar.append("g").attr("transform", "translate(270,215) scale(0.3)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(480,220) scale(0.25)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(510,400) scale(0.25)").attr("class", "gCenter"));
+                    gArray.push(gTar.append("g").attr("transform", "translate(560,200) scale(0.2)").attr("class", "gCenter"));
+                }
+
+
+                var delay = 300;
+                for (var j = 0; j < count; j++) {
+                    var g = gArray[j];
+
+                    //转换数据
+                    var nodes = tree.nodes(root[j]);
+
+                    var node = g.selectAll(".node")
+                        .data(nodes)
+                        .enter().append("g")
+                        .attr("class", function (d, i) {
+                            if (d.type == "root")
+                                return "rootNode";
+                            else if (d.type == "people")
+                                return "peoNode";
+                            else if (d.type == "area")
+                                return "areaNode";
+                            else if (d.type == "company")
+                                return "comNode";
+                            else {
+                                if (d.parent.type == "people") {
+                                    return "peoChild";
+                                }
+                                else if (d.parent.type == "company") {
+                                    return "comChild";
+                                }
+                                else if (d.parent.type == "area") {
+                                    return "areaChild";
+                                }
+                            }
+                        })
+                        .attr("transform", function (d) {
+                            if (d.type == "root")
+                                return "translate(" + d.y + ")";
+                            else if (d.type == "company")
+                                return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 22) + ")";
+                            else if (d.type == "area")
+                                return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 11) + ")";
+                            else if (d.type == "people")
+                                return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")";
+                            else if (d.type == "child") {
+                                var translate = 130;
+                                var dy = 0;
+                                if (d.parent.type == "company") {
+                                    dy = d.parent.y + 35;
+                                }
+                                else if (d.parent.type == "area") {
+                                    dy = d.parent.y + 24;
+                                }
+                                else if (d.parent.type == "people") {
+                                    dy = d.parent.y + 13;
+                                }
+                                if (d.parent.name.length < 12) {
+                                    var txt = gTar.append("text").attr("font-size", 10).text(d.parent.name);
+                                    translate = txt.node().getBBox().width;
+                                    txt.remove();
+                                }
+                                return "rotate(" + (d.x - 90) + ")translate(" + (dy + translate) + ")";
+                            }
+
+                        });
+
+                    //画圆圈
+                    node.append("circle")
+                        .attr("r", function (d, i) {
+                            if (d.type == "root") return 52;
+                            else if (d.type == "child") return 2;
+                            else return 5;
+                        });
+
+                    //写字
+                    node.append("text")
+                        .attr("dy", ".31em")
+                        .attr("text-anchor", function (d) {
+                            if (d.type == "root")
+                                return "middle";
+                            else
+                                return d.x < 180 ? "start" : "end";
+                        })
+                        .attr("transform", function (d) {
+                            if (d.type != "root")
+                                return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)";
+                        })
+                        .text(function (d) {
+                            if (d.name.length > 12) {
+                                return d.name.substring(0, 12) + "…";
+                            }
+                            else {
+                                return d.name;
+                            }
+                        });
+
+                    //设置动画（孔雀展屏）
+                    node.attr("display", "none")
+                        .transition().duration(100).delay(function (d, i) { return delay * j + 100 * i; })
+                        .attr("display", "block");
+                }
+
+
+                var timer = setTimeout(function () {
+                    //var a = d3.select("body").select(".comChild").select("circle").node().getBoundingClientRect();//与$(selection.node()).offset()一样
+                    //var b = $(d3.select("body").select(".comChild").select("circle").node()).position();//可以用
+                    //var c = $(d3.select("body").select(".comChild").select("circle").node()).offset();
+                    //var d = d3.select("body").select(".areaChild").select("circle").node().getBoundingClientRect();
+                    //gTar.append("path").attr("d", getCurvePath([(b.left-200), b.top], [500, 453], 30)).attr("stroke", "white").attr("fill", "none");
+                    //gTar.append("line").attr("x1", 350).attr("y1", 400).attr("x2", 483).attr("y2", 389).attr("stroke", "white").attr("fill", "none");
+
+                    drawLinks();
+
+                }, timeDelay);
+            }
+
+            function drawLinks() {
+                for (var i = 0; i < root.length - 1; i++) {
+                    var n = 3;
+                    var current = $(".gCenter:eq(" + i + ")");
+                    var gComs = getTopN(current, "comNode", n);
+                    var gComChilds = getTopN(current, "comChild", n);
+                    var gPeos = getTopN(current, "peoNode", n);
+                    var gPeoChilds = getTopN(current, "peoChild", n);
+                    var gAreas = getTopN(current, "areaNode", n);
+                    var gAreaChilds = getTopN(current, "areaChild", n);
+                    for (var j = i + 1; j < root.length; j++) {
+                        var next = $(".gCenter:eq(" + j + ")");
+                        var gComs1 = getTopN(next, "comNode", n);
+                        var gComChilds1 = getTopN(next, "comChild", n);
+                        var gPeos1 = getTopN(next, "peoNode", n);
+                        var gPeoChilds1 = getTopN(next, "peoChild", n);
+                        var gAreas1 = getTopN(next, "areaNode", n);
+                        var gAreaChilds1 = getTopN(next, "areaChild", n);
+
+                        //比较
+                        for (var k = 0; k < n; k++) {
+                            for (var m = 0; m < n; m++) {
+                                var comTxt = $(gComs[k]).select("text").text().trim();
+                                var comTxt1 = $(gComs1[m]).select("text").text().trim();
+                                var peoTxt = $(gPeos[k]).select("text").text().trim();
+                                var peoTxt1 = $(gPeos1[m]).select("text").text().trim();
+                                var areaTxt = $(gAreas[k]).select("text").text().trim();
+                                var areaTxt1 = $(gAreas1[m]).select("text").text().trim();
+
+                                if (comTxt == comTxt1) {
+                                    var p1 = $(gComChilds[k]).offset();//.position();
+                                    var p2 = $(gComChilds1[m]).offset();//.position();
+                                    var divOffset = $("#mainDiv").offset();
+                                    gLinks.append("path").attr("d", getCurvePath([(p1.left - 200 - divOffset.left), p1.top - divOffset.top],
+                                        [p2.left - 200 - divOffset.left, p2.top - divOffset.top], 80))
+                                        .attr("stroke", "#01b5e8").attr("fill", "none").attr("opacity", 0.3);
+                                }
+                                if (peoTxt == peoTxt1) {
+                                    var p1 = $(gPeoChilds[k]).offset();//.position();
+                                    var p2 = $(gPeoChilds1[m]).offset();//.position();
+                                    var divOffset = $("#mainDiv").offset();
+                                    gLinks.append("path").attr("d", getCurvePath([(p1.left - 200 - divOffset.left), p1.top - divOffset.top],
+                                        [p2.left - 200 - divOffset.left, p2.top - divOffset.top], 80))
+                                        .attr("stroke", "#455eba").attr("fill", "none").attr("opacity", 0.3);
+                                }
+                                if (areaTxt == areaTxt1) {
+                                    var p1 = $(gAreaChilds[k]).offset();//.position();
+                                    var p2 = $(gAreaChilds1[m]).offset();//.position();
+                                    var divOffset = $("#mainDiv").offset();
+                                    gLinks.append("path").attr("d", getCurvePath([(p1.left - 200 - divOffset.left), p1.top - divOffset.top],
+                                        [p2.left - 200 - divOffset.left, p2.top - divOffset.top], -80))
+                                        .attr("stroke", "#01f1f0").attr("fill", "none").attr("opacity", 0.3);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        /*
+        src,des为曲线的起点和终点
+        r是一个参数，表示弯曲程度
+        */
+        function getCurvePath(src, des, r) {
+            var mid = [(src[0] + des[0]) / 2, (src[1] + des[1]) / 2];
+
+            var dx = des[0] - src[0];
+            var dy = des[1] - src[1];
+
+            var vec = [0, 0];
+
+            if (Math.abs(dx) < 1e-6)
+                vec[0] = 0;
+            else
+                vec[0] = dy / dx;
+
+            vec[1] = -1.0;
+
+            vec = unitVec(vec);
+
+            var stod = [dx, dy];
+            var dtos = [dx * -1, dy * -1];
+
+            var d = dis(stod);
+
+            stod = unitVec(stod);
+            dtos = unitVec(dtos);
+
+            var o = [mid[0] + vec[0] * r, mid[1] + vec[1] * r];
+            var a = [o[0] + dtos[0] * d / 4, o[1] + dtos[1] * d / 4];
+            var b = [o[0] + stod[0] * d / 4, o[1] + stod[1] * d / 4];
+
+            return "M" + src[0] + "," + src[1] +
+                    "C" + a[0] + "," + a[1] +
+                    " " + b[0] + "," + b[1] +
+                    " " + des[0] + "," + des[1];
+
+            function unitVec(a) {
+                var l = dis(a);
+                a[0] /= l;
+                a[1] /= l;
+                return a;
+            }
+
+            function dis(a) {
+                return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+            }
+
+        }
+
+        //返回数组的前n项
+        function getTopN(result, cla, n) {
+            var arr = [];
+            var result = result.find("." + cla);
+            for (var i = 0; i < n; i++) {
+                arr.push(result[i]);
+            }
+            return arr;
+        }
+    </script>
+</head>
+<body>
+    <div style="width: 1320px; margin: 30px auto;" id="mainDiv">
+        <div style="width:200px;height:720px;float:left; background-color:#000;">
+            <svg width="200" height="720">
+                <g font-size="12" id="left">
+                    <rect x="0" y="0" width="200" height="720" fill="#020911"></rect>
+                    <rect x="15" y="60" width="75" height="20" fill="#d71a21"></rect>
+                    <text x="53" y="75" text-anchor="middle" fill="white" font-weight="bold" font-size="14">ISoftStone</text>
+                    <text x="15" y="100" fill="white">2015贵阳国际大数据产业博览会</text>
+                    <text x="15" y="120" fill="gray">中国 贵阳</text>
+                    <text x="15" y="135" fill="gray">2015年 5月26日 - 5月29日</text>
+                    <text x="15" y="175" fill="white" font-size="24" font-weight="bold">实时盛况分析</text>
+                    <rect x="15" y="220" width="160" height="20" stroke="gray" fill="#1b1b1b"></rect>
+                    <g transform="translate(155,222)">
+                        <path transform="scale(0.03)" fill="#d71a21" d="M448.3,424.7L335,311.3c20.8-26,33.3-59.1,33.3-95.1c0-84.1-68.1-152.2-152-152.2c-84,0-152,68.2-152,152.2
+	s68.1,152.2,152,152.2c36.2,0,69.4-12.7,95.5-33.8L425,448L448.3,424.7z M120.1,312.6c-25.7-25.7-39.8-59.9-39.8-96.3
+	s14.2-70.6,39.8-96.3S180,80,216.3,80c36.3,0,70.5,14.2,96.2,39.9s39.8,59.9,39.8,96.3s-14.2,70.6-39.8,96.3
+	c-25.7,25.7-59.9,39.9-96.2,39.9C180,352.5,145.8,338.3,120.1,312.6z"></path>
+                    </g>
+                    <text x="15" y="270" fill="gray">共发现文章(篇)：</text>
+                    <text x="15" y="295" fill="gray">来自互联网媒介(篇)：</text>
+
+                    <text x="105" y="272" fill="#d71a21" font-size="18">6523</text>
+                    <text x="125" y="297" fill="#d71a21" font-size="18">524</text>
+
+                    <g transform="translate(5,50)">
+                        <text x="5" y="310" fill="#d71a21">1分钟</text>
+                        <text x="5" y="335" fill="#d71a21">5分钟</text>
+                        <text x="5" y="360" fill="#d71a21">1小时</text>
+                        <text x="5" y="385" fill="#d71a21">2小时</text>
+                        <text x="5" y="410" fill="#d71a21">8小时</text>
+
+                        <text x="35" y="310" fill="gray">贵阳数博会四论：一马当先…</text>
+                        <text x="35" y="335" fill="gray">贵阳数博会三论：破解"李…</text>
+                        <text x="35" y="360" fill="gray">贵州：何以跃入大数据产业…</text>
+                        <text x="35" y="385" fill="gray">站在大数据的"风口"上…</text>
+                        <text x="35" y="410" fill="gray">贵阳数博会之二：先争"块…</text>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div style="float:left;position:relative;width:820px;height:720px;">
+            <div id="ring" style="height:160px; width:100%;z-index:100; color:white; position:absolute;">
+                <div id="ringContainer">
+                    <table cellpadding="0" cellspacing="0" style="width:100%; text-align:center;">
+                        <tr>
+                            <td colspan="3"><span id="ringTop" style="color: #445EBD">人物</span></td>
+                        </tr>
+                        <tr>
+                            <td width="96px" style="text-align:right;"><span id="ringLeft" style="color: #00FFFF">地区</span></td>
+                            <td><div id="spritespin" style="margin:0px;"></div></td>
+                            <td width="96px" style="text-align:left;"><span id="ringRight" style="color: #03ADE0">企业</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span id="ringBottom" style="color: #E11516">关键词</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div style="position:absolute;">
+                <svg width="820" height="720" id="svg1">
+                    <defs>
+                        <linearGradient id="bgcolor" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10324e;stop-opacity:1" />
+                            <stop offset="60%" style="stop-color:#000d16;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#072339;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <g id="gMain">
+                        <rect x="0" y="0" width="820" height="720" fill="url(#bgcolor)"></rect>
+                        <g id="timeBar" transform="translate(0,145)">
+                            <line x1="15" y1="490" x2="805" y2="490" stroke="#02acdf" stroke-width="2.5"></line>
+                            <circle cx="30" cy="490" r="9" fill="#0e2944" stroke="#02acdf"></circle>
+                            <circle cx="180" cy="490" r="9" fill="#3d0f1c" stroke="#e21617"></circle>
+                            <circle cx="330" cy="490" r="9" fill="#0e2944" stroke="#02acdf"></circle>
+                            <circle cx="480" cy="490" r="9" fill="#0e2944" stroke="#02acdf"></circle>
+                            <circle cx="630" cy="490" r="9" fill="#0e2944" stroke="#02acdf"></circle>
+                            <circle cx="780" cy="490" r="9" fill="#0e2944" stroke="#02acdf"></circle>
+                            <text x="22" y="520" fill="#00ffff" font-size="12">5.27</text>
+                            <text x="172" y="520" fill="#00ffff" font-size="12">5.28</text>
+                            <text x="322" y="520" fill="#00ffff" font-size="12">5.29</text>
+                            <text x="472" y="520" fill="#00ffff" font-size="12">5.30</text>
+                            <text x="622" y="520" fill="#00ffff" font-size="12">5.31</text>
+                            <text x="772" y="520" fill="#00ffff" font-size="12">6.1</text>
+                        </g>
+                        
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div style="width: 260px; height: 720px; float: left; background-color: #072339;">
+            <div id="holder" style="height:200px;">
+                <svg width="260" height="200">
+                    <g font-size="12" id="right">
+                        <text x="10" y="28" fill="white" font-size="14">报道排名</text>
+                        <text x="10" y="50" fill="#d71a21">1</text>
+                        <text x="10" y="70" fill="#d71a21">2</text>
+                        <text x="10" y="90" fill="#d71a21">3</text>
+                        <text x="10" y="110" fill="#00ffff">4</text>
+                        <text x="10" y="130" fill="#00ffff">5</text>
+                        <text x="20" y="50" fill="gray">贵阳数博会四论：一马当先…</text>
+                        <text x="20" y="70" fill="gray">贵阳数博会三论：破解"李…</text>
+                        <text x="20" y="90" fill="gray">贵州：何以跃入大数据产业…</text>
+                        <text x="20" y="110" fill="gray">站在大数据的"风口"上…</text>
+                        <text x="20" y="130" fill="gray">贵阳数博会之二：先争"块…</text>
+                        <text x="190" y="50" fill="gray">40篇</text>
+                        <text x="190" y="70" fill="gray">39篇</text>
+                        <text x="190" y="90" fill="gray">36篇</text>
+                        <text x="190" y="110" fill="gray">33篇</text>
+                        <text x="190" y="130" fill="gray">33篇</text>
+
+                        <text x="10" y="300" fill="white" font-size="14">媒体排名</text>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="partTitle">关注趋势</h3>
+            <div id="linechart"></div>
+            <h3 class="partTitle">媒体排名</h3>
+            <div id="barchart"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var barChartDataset = {
+            cities: ['新浪网', '新浪微博', '腾讯网', '搜狐', '贵阳晚报'],
+            data: [802, 399, 337, 289, 188]
+        };
+
+        drwaBarChart('#barchart', barChartDataset);
+
+        var dataset = [110, 220, 660, 440, 330, 110, 770];
+
+        drawLineChart('#linechart', dataset);
+
+        function drawLineChart(id, dataset) {
+
+            //var xMarks = ['', '', '', '', '', '', ''];
+            var w = 200;
+            var h = 230;
+            var padding = 40;
+            //模拟数据
+            //getData();
+            //定义画布
+            var svg = d3.select(id)
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+            //添加背景
+            svg.append("g")
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", w)
+            .attr("height", h)
+            .style("fill", "#072339")
+            .style("stroke-width", 0)
+            .style("stroke", "#E7E7E7");
+
+
+            //横坐标轴比例尺
+            var xScale = d3.scale.linear()
+            .domain([0, dataset.length - 1])
+            .range([padding, w - padding]);
+
+            //var xScale = d3.scale.ordinal()
+            //            .domain(d3.range(dataset.length))
+            //            .rangeRoundBands([0, 500], 0.05);
+
+            //纵坐标轴比例尺
+            var yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset)])
+            .range([h - padding, padding]);
+            //var yScale = d3.scale.linear()
+            //               .domain([0, d3.max(dataset)])
+            //               .range([0, 500]);
+
+
+            //定义横轴
+            var xAxis = d3.svg.axis()
+            .scale(xScale)
+            .orient("bottom").ticks(dataset.length);
+            //添加横坐标轴并通过编号获取对应的横轴标签
+            var xBar = svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + (h - padding) + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .text(function (d) { return d; });//function (d) { return xMarks[d]; }
+            //定义纵轴
+            var yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient("left").ticks(10);
+            //添加纵轴
+            var yBar = svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + padding + ",0)")
+            .call(yAxis);
+
+            //添加折线
+            var line = d3.svg.line()
+            .interpolate("linear")
+            .x(function (d, i) { return xScale(i); })
+            .y(function (d) { return yScale(d); });
+
+            var path = svg.append("path")
+            .attr("d", line(dataset))
+            .attr('style', "fill:none;stroke-width:1;stroke:#013C5C");//.transition().duration(2000);
+
+
+            //添加系列的小圆点
+            svg.selectAll("circle").data(dataset).enter().append("circle")
+            .attr("cx", function (d, i) {
+                return xScale(i);
+            })
+            .attr("cy", function (d) {
+                return yScale(d);
+            })
+            .attr("r", 5).attr("class", 'p')
+            .attr("style", "stroke:#0086BB;stroke-width:2;fill:#003D5A");
+
+            //重新作图
+            function drawChart() {
+                //getData();
+                d3.selectAll('.x').remove();
+                d3.selectAll('.val').remove();
+                d3.selectAll('circle').style('stroke', '#0086BB');
+                yBar.transition().duration(1000).call(yAxis);
+                //纵轴数据更新
+                yScale = d3.scale.linear()
+                .domain([0, d3.max(dataset)])
+                .range([h - padding, padding]);
+                //重绘路径
+                path.transition().duration(1000).attr("d", line(dataset));
+                //重绘4圆点
+                svg.selectAll(".p").data(dataset).style("stroke-width", 2).attr("r", "5").transition().duration(1000)
+                .attr("cx", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d);
+                }).each('end', function (d, i) {
+                    var self = d3.select(this)
+                    if (d > 150) {
+                        self.style('stroke', 'red');
+                        svg.append('circle').attr("cx", self.attr('cx')).attr("cy", self.attr('cy')).attr("class", "x").transition().each('end', firstCallback);
+                        svg.append('circle').attr("cx", self.attr('cx')).attr("cy", self.attr('cy')).attr("class", "x2").transition().delay(200).each('end', firstCallback2);
+                    }
+                    var text = svg.append('text').attr('class', 'val').text(d)
+                     .attr('x', self.attr('cx')).attr('y', self.attr('cy'))
+                     .attr("text-anchor", "begin").attr("font-size", 12).attr("fill", "#0086BB");
+                    getPointForText(i, text);
+                });
+
+            }
+
+
+            function firstCallback(d, i) {
+                annimix('.x', firstCallback);
+            }
+
+
+            function firstCallback2(d, i) {
+                annimix('.x2', firstCallback2);
+            }
+
+
+            function annimix(className, callback) {
+                d3.selectAll(className).attr('opacity', '1').attr("r", 0).attr("style", "stroke:#0086BB;stroke-width:2;fill:#003D5A").attr("class", "x")
+                    .transition().duration(2000).attr('opacity', '0').attr('stroke-width', '20').attr('r', '20').each('end', callback);
+
+            }
+
+            var textPoint = {
+
+                left: { dx: -20, dy: 5 },
+                right: { dx: 10, dy: 5 },
+                top: { dx: -10, dy: -10 },
+                bottom: { dx: -5, dy: 20 }
+            };
+
+            function getPointForText(i, text) {
+
+                var current = dataset[i];
+                var p = null;
+                if (i == 0) {
+
+                    var last = dataset[i + 1];
+
+                    if (current >= last) {
+                        p = textPoint.top;
+                    } else {
+                        p = textPoint.bottom;
+                    }
+                } else if (i == dataset.length - 1) {
+                    var prev = dataset[i - 1];
+                    if (current >= prev) {
+                        p = textPoint.top;
+                    } else {
+                        p = textPoint.bottom;
+                    }
+
+                } else {
+                    var last = dataset[i + 1];
+                    var prev = dataset[i - 1];
+                    if (prev > current && current > last) {
+                        p = textPoint.top;
+                    } else if (prev > current && current < last) {
+                        p = textPoint.bottom;
+                    } else if (prev < current && current > last) {
+                        p = textPoint.top;
+                    }
+                    else if (prev < current && current < last) {
+                        p = textPoint.bottom;
+                    } else {
+                        p = textPoint.top;
+                    }
+                }
+                text.attr("dx", p.dx).attr("dy", p.dy);
+            }
+
+
+            drawChart();
+        }
+
+        function drwaBarChart(id, data) {
+
+            var width = 260;
+            var height = 230;
+            var dataset = data.data; //[802, 399, 337, 289, 188];
+
+            var cities = data.cities; //['新浪网', '新浪微博', '腾讯网', '搜狐', '贵阳晚报'];
+
+            var svg = d3.select(id).append("svg")
+                                    .attr("width", width)
+                                    .attr("height", height);
+
+
+            var xAxisScale = d3.scale.linear()
+                           .domain([0, d3.max(dataset)])
+                           .range([0, 130]);
+
+            var xAxis = d3.svg.axis()
+                            .scale(xAxisScale)
+                            .orient("bottom");
+
+
+            var yAxisScale = d3.scale.ordinal()
+                                //.domain(cities)
+                                //.rangeBand([0, 130])
+                            .domain(d3.range(dataset.length))
+                            .rangeRoundBands([0, 100]);
+
+            var yAxis = d3.svg.axis()
+                            .scale(yAxisScale)
+                            .orient("left");
+
+
+            var yScale = d3.scale.ordinal()
+                            .domain(d3.range(dataset.length))
+                            .rangeRoundBands([0, 100], 0.05);
+
+            var xScale = d3.scale.linear()
+                            .domain([0, d3.max(dataset)])
+                            .range([0, 130]);
+
+
+            svg.append('g').attr("transform", "translate(40,0)").selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("x", 31)
+               .attr("class", 'rect')
+               .attr("y", function (d, i) {
+                   return yScale(i) + 55;
+
+               })
+               .attr('width', 0)
+               .attr("height", function (d, i) {
+                   return yScale.rangeBand() / 2;
+               }).each(function (d, i) {
+                   var self = d3.select(this);
+                   if (d < 300) {
+                       self.style('stroke', '#0086BB');
+                   } else {
+                       self.style('stroke', 'red').style('fill', 'red');
+                   }
+               }).transition().duration(500).attr("width", function (d, i) {
+                   return xScale(d);
+               })
+
+
+            //数量
+            svg.append('g').selectAll("text")
+                .data(dataset)
+                .enter().append("text")
+                .attr('x', 180)
+               .attr("y", function (d, i) {
+                   return yScale(i) + 52;
+               })
+                .attr("dx", 33)
+                .attr("dy", 12)
+                .text(function (d, i) {
+                    var self = d3.select(this);
+                    if (d < 300) {
+                        self.style('stroke', '#0086BB');
+                    } else {
+                        self.style('stroke', 'red').style('fill', 'red');
+                    }
+                    return d;
+                });
+
+            //篇
+            svg.append('g').selectAll("text")
+               .data(dataset)
+               .enter().append("text")
+               .attr('x', 205)
+              .attr("y", function (d, i) {
+                  return yScale(i) + 52;
+              })
+               .attr("dx", 33)
+               .attr("dy", 12)
+               .attr("fill", "#ccc")
+               .text(function (d, i) {
+                   return '篇';
+               });
+
+            //X
+            svg.append("g")
+                .attr("class", "axis xaxis")
+                .attr("transform", "translate(70," + (height - 50) + ")")
+                .call(xAxis);
+            //Y
+            svg.append("g")
+                .attr("class", "axis yaxis")
+                .attr("transform", "translate(70,48)")
+                .call(yAxis).selectAll('text')
+                .each(function (d, i) {
+                    var self = d3.select(this);
+                    self.text(cities[i]).attr("fill", "#ccc")
+                });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>时间控件</title>
+    <script src="js/d3.js"></script>
+    <script src="data/timerData.js"></script>
+    <script src="js/jquery1.7.2.js"></script>
+    <style>
+        * {
+            font-family: 'Microsoft YaHei';
+        }
+    </style>
+    <script>
+        $(function () {
+            //draw time
+            drawTime(192, 142, 7, secData, [225, 400], "#84c7c0", 9, 36, "sec");
+            drawTime(150, 123, 6, minData, [510, 270], "#afbb4b", 8, 26, "min");
+            drawTime(63, 65, 7, hourData, [740, 290], "#f74505", 9, 18, "hour");
+
+            //draw date
+            drawDate1(285, "#84c7c0", "day");
+            drawDate1(225, "#afbb4b", "mon");
+            drawDate1(150, "#b68d4d", "year");
+
+            drawDate(398, 285, 225, 16, dayData, "#84c7c0", 13, -Math.PI * 29 / 30, "day");
+            drawDate(308, 225, 150, 20, monData, "#afbb4b", 14, -Math.PI * 28 / 30, "mon");
+            drawDate(200, 150, 0, 26, yearData, "#b68d4d", 13, -Math.PI * 24 / 30, "year");
+
+
+            //draw wheel
+            drawWheel("M21.94020660062127,67.5250126569559A71,71 0 0,0 -21.940206600621263,-67.52501265695591", "#84c7c0", [225, 400], 173, 0.3, "sec");
+            drawWheel("M16.377900701872214,50.405995363643136A53,53 0 0,0 -16.37790070187221,-50.40599536364314", "#84c7c0", [510, 270], -7, 0.3, "min");
+            drawWheel("M16.377900701872214,50.405995363643136A53,53 0 0,0 -16.37790070187221,-50.40599536364314", "#afbb4b", [510, 270], 200, 0.4, "min");
+            drawWheel("M11.124611797498108,34.238034586625524A36,36 0 0,0 -11.124611797498105,-34.23803458662553", "#afbb4b", [740, 290], 20, 0.4, "hour");
+        })
+
+        //radius    半径
+        //curColor  当前颜色
+        //curID     当前容器ID
+        function drawDate1(radius, curColor, curID) {
+            var curArc = d3.svg.arc()
+                    .startAngle(-Math.PI / 2)
+                    .endAngle(Math.PI / 2)
+                    .innerRadius(0)
+                    .outerRadius(radius);
+
+            var gday = d3.select("#" + curID).append("g").attr("transform", "translate(600,701)");
+            gday.append("path").attr("d", curArc).attr("stroke", curColor).attr("fill", "none")
+                .attr("stroke-width", 2).attr("stroke-dashoffset", 10)
+                .attr("stroke-dasharray", 2);
+        }
+
+        function drawDate(radius, bgradius, bginnerRadius, rCicle, root, curColor, fontSize, pi, curID) {
+            //定义分区布局函数
+            var partition = d3.layout.partition()
+                            .sort(null)
+                            .size([Math.PI * 2, radius * radius])
+                            .value(function (d) { return 1; });
+
+            //定义绘制弧形的函数
+            var arc = d3.svg.arc()
+                        .startAngle(function (d) { return d.x; })
+                        .endAngle(pi)
+                        //.endAngle(function (d) { return d.x + d.dx; })
+                        .innerRadius(function (d) { return Math.sqrt(d.y); })
+                        .outerRadius(function (d) { return Math.sqrt(d.y + 6000); });
+
+            var nodes = partition.nodes(root);
+
+            //绘制
+            var gbg = d3.select("#" + curID).append("g").attr("transform", "translate(600,701)")
+            var gdate = d3.select("#" + curID).append("g").attr("transform", "translate(600,701)");
+            var arcs = gdate.selectAll("g")
+                          .data(nodes)
+                          .enter().append("g");
+
+            //画圆弧
+            //arcs.append("path")
+            //    .attr("display", function (d) { return d.depth ? null : "none"; }) // hide inner ring
+            //    .attr("d", arc)
+            //    .attr("fill", curColor)
+            //.attr("stroke", curColor)
+            //.attr("stroke-width", 2)
+            //.attr("stroke-dashoffset", 10)
+            //.attr("stroke-dasharray", 2);
+
+            //画圆周刻度的 圆
+            arcs.append("circle")
+                .attr("r", rCicle)
+                .attr("stroke", curColor)
+                .attr("stroke-width", 2)
+                .attr("fill", "#262626")
+                .attr("transform", function (d, i) {
+                    var obj = arc.centroid(d);
+                    obj[1] = obj[1] - 27;
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("class", function (d, i) { return "dateCir" + i; })
+                .attr("opacity", 0)
+                .attr("cursor", "pointer");
+
+            //画指针文字
+            arcs.append("text")
+                .attr("font-size", fontSize)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .attr("transform", function (d, i) {
+                    var obj = arc.centroid(d);
+                    obj[1] = obj[1] + 3;
+                    return "translate(" + obj + ")";
+                })
+                .text(function (d) { return d.name; })
+                .attr("pointer-events", "none")
+                .attr("display", "none")
+                .attr("class", function (d, i) { return "dateTxt" + i; });
+
+            //画背景扇形区域
+            var curArc = d3.svg.arc()
+                    //.startAngle(-Math.PI / 2)
+                    .innerRadius(bginnerRadius)
+                    .outerRadius(bgradius);
+
+
+            //移除圆心处的圆圈
+            d3.select("#" + curID).select(".dateCir0").remove();
+
+            var startDate = d3.select("#" + curID).select(".dateCir1").attr("opacity", 1);
+            var startDateTxt = d3.select("#" + curID).select(".dateTxt1").attr("display", "block");
+            var endDate = d3.select("#" + curID).select(".dateCir2").attr("opacity", 1).attr("fill", curColor);
+            var endtDateTxt = d3.select("#" + curID).select(".dateTxt2").attr("display", "block");
+            var rstart = (startDate.datum().x + startDate.datum().dx / 2 - Math.PI) / 2;
+            var rend = (endDate.datum().x + endDate.datum().dx / 2 - Math.PI) / 2;
+            gbg.selectAll("path").remove();
+            gbg.append("path").attr("d", curArc.startAngle(rstart).endAngle(rend)).attr("fill", curColor).attr("fill-opacity", 0.3);
+
+
+            //用来保存当前拖拽的点
+            var curStartCircle = null;
+            var curEndCircle = null;
+
+            var drag = d3.behavior.drag()
+                 .on("drag", dragmove);
+
+            arcs.selectAll("circle").call(drag);
+            arcs.selectAll("circle").on("mouseup", function (d) {
+                //开始
+                if (curStartCircle != null) {
+                    var newIndex = d3.select(this).attr("class").substr(7);
+                    var oldIndex = startDate.attr("class").substr(7);
+                    d3.select(this).attr("opacity", 1);
+                    d3.select("#" + curID).select(".dateTxt" + newIndex).attr("display", "block");
+
+                    if (curStartCircle.attr("class") != endDate.attr("class")) {
+                        curStartCircle.attr("opacity", 0);
+                        d3.select("#" + curID).select(".dateTxt" + oldIndex).attr("display", "none");
+                    }
+                    curStartCircle = null;
+                    startDate = d3.select(this);
+                }
+                //结束
+                if (curEndCircle != null) {
+                    var newIndex = d3.select(this).attr("class").substr(7);
+                    var oldIndex = endDate.attr("class").substr(7);
+                    d3.select(this).attr("fill", curEndCircle.attr("fill")).attr("opacity", 1);
+                    d3.select("#" + curID).select(".dateTxt" + newIndex).attr("display", "block");
+
+                    if (curEndCircle.attr("class") == startDate.attr("class")) {
+                        curEndCircle.attr("fill", "#262626");
+                    }
+                    else {
+                        curEndCircle.attr("fill", "#262626").attr("opacity", 0);
+                        d3.select("#" + curID).select(".dateTxt" + oldIndex).attr("display", "none");
+                    }
+
+
+                    curEndCircle = null;
+                    endDate = d3.select(this);
+                }
+                rstart = (startDate.datum().x + startDate.datum().dx / 2 - Math.PI) / 2;
+                rend = (endDate.datum().x + endDate.datum().dx / 2 - Math.PI) / 2;
+                gbg.selectAll("path").remove();
+                gbg.append("path").transition().duration(200).attr("d", curArc.startAngle(rstart).endAngle(rend)).attr("fill", curColor).attr("fill-opacity", 0.3);
+
+
+            });
+
+            function dragmove(d) {
+                var fillColor = d3.select(this).attr("fill");
+                var opacity = d3.select(this).attr("opacity");
+                //实心(结束点)
+                if (opacity == 1 && fillColor == curColor) {
+                    curEndCircle = d3.select(this);
+                }
+                else if (opacity == 1 && fillColor != curColor) {
+                    curStartCircle = d3.select(this);
+                }
+            }
+        }
+
+
+        //radius       刻度所在的圆半径
+        //bgradius     背景扇形区域颜色
+        //root         数据
+        //translate    圆心所在的位置(需要平移),是个数组
+        //curColor     圆心数字的颜色/范围区域颜色/刻度圈颜色
+        //fontSize     圆周刻度数字大小
+        //rootFontSize 圆心值大小
+        //curID        当前容器ID
+        function drawTime(radius, bgradius, rCicle, root, translate, curColor, fontSize, rootFontSize, curID) {
+            //定义分区布局函数
+            var partition = d3.layout.partition()
+                            .sort(null)
+                            .size([2 * Math.PI, radius * radius])
+                            .value(function (d) { return 1; });
+
+            //定义绘制弧形的函数
+            var arc = d3.svg.arc()
+                        .startAngle(function (d) { return d.x; })
+                        .endAngle(function (d) { return d.x + d.dx; })
+                        .innerRadius(function (d) { return Math.sqrt(d.y); })
+                        .outerRadius(function (d) { return Math.sqrt(d.y + 6000); });
+
+            var nodes = partition.nodes(root);
+            var links = partition.links(nodes);
+
+            //绘制
+            var gsecbg = d3.select("#" + curID).append("g").attr("transform", "translate(" + translate + ")")
+            var gsec = d3.select("#" + curID).append("g").attr("transform", "translate(" + translate + ")");
+            var arcs = gsec.selectAll("g")
+                          .data(nodes)
+                          .enter().append("g");
+
+            //画61个圆 第一个是root圆
+            arcs.append("circle")
+                .attr("r", rCicle)
+                .attr("stroke", "#323232")
+                .attr("fill", "#262626")
+                .attr("transform", function (d, i) {
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("class", function (d, i) { return "secCir" + i; })
+                .attr("cursor", "pointer");
+
+            //画60个指针文字 + 圆心中的当前时间
+            arcs.append("text")
+                .attr("font-size", fontSize)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .attr("transform", function (d, i) {
+                    var obj = arc.centroid(d);
+                    obj[1] = obj[1] + 3;
+                    return "translate(" + obj + ")";
+                })
+                .text(function (d) { return d.name; })
+                .attr("pointer-events", "none")
+                .attr("class", function (d) {
+                    if (d.type == "show") return "secRootTxt";
+                });
+
+            //设置圆心中间的文字样式
+            d3.select("#" + curID).select(".secCir0").remove();
+            d3.select("#" + curID).select(".secRootTxt").attr("fill", curColor).attr("font-size", rootFontSize).attr("transform", "translate(0,12)");
+
+            //画背景扇形区域
+            var curArc = d3.svg.arc()
+                    .innerRadius(0)
+                    .outerRadius(bgradius);
+
+            var startTime = d3.select("#" + curID).select(".secCir1").attr("stroke", curColor);
+            var endTime = d3.select("#" + curID).select(".secCir5").attr("stroke", curColor).attr("fill", curColor);
+            var rstart = startTime.datum().x + startTime.datum().dx / 2;
+            var rend = endTime.datum().x + endTime.datum().dx / 2;
+            gsecbg.selectAll("path").remove();
+            gsecbg.append("path").attr("d", curArc.startAngle(rstart).endAngle(rend)).attr("fill", curColor).attr("fill-opacity", 0.3);
+
+            //用来保存当前拖拽的点
+            var curStartCircle = null;
+            var curEndCircle = null;
+            var drag = d3.behavior.drag()
+                    .on("drag", dragmove);
+
+            arcs.selectAll("circle").call(drag);
+            arcs.selectAll("circle").on("mouseup", function (d) {
+                //开始
+                if (curStartCircle != null) {
+                    d3.select(this).attr("stroke", curStartCircle.attr("stroke"));
+                    if (curStartCircle.attr("class") != endTime.attr("class")) {
+                        curStartCircle.attr("stroke", "#262626")
+                    }
+                    curStartCircle = null;
+                    startTime = d3.select(this);
+                }
+                //结束
+                if (curEndCircle != null) {
+                    d3.select(this).attr("fill", curEndCircle.attr("fill")).attr("stroke", curEndCircle.attr("stroke"));
+                    if (curEndCircle.attr("class") == startTime.attr("class")) {
+                        curEndCircle.attr("fill", "#323232");
+                    }
+                    else {
+                        curEndCircle.attr("stroke", "#262626").attr("fill", "#323232");
+                    }
+                    curEndCircle = null;
+                    endTime = d3.select(this);
+                }
+                rstart = startTime.datum().x + startTime.datum().dx / 2;
+                rend = endTime.datum().x + endTime.datum().dx / 2;
+                gsecbg.selectAll("path").remove();
+                gsecbg.append("path").attr("d", curArc.startAngle(rstart).endAngle(rend)).attr("fill", curColor).attr("fill-opacity", 0.3);
+
+                var value = startTime.attr("class").substr(6) + "-" + endTime.attr("class").substr(6);
+                if (curID == "sec") {
+                    d3.select("#sec").select(".secRootTxt").text(value + "秒");
+                }
+                else if (curID == "min") {
+                    d3.select("#min").select(".secRootTxt").text(value + "分");
+                }
+                else if (curID == "hour") {
+                    d3.select("#hour").select(".secRootTxt").text(value + "时");
+                }
+
+            });
+
+            function dragmove(d) {
+                var fillColor = d3.select(this).attr("fill");
+                var stroke = d3.select(this).attr("stroke");
+                //实心(结束点)
+                if (stroke == curColor && fillColor == curColor) {
+                    curEndCircle = d3.select(this);
+                }
+                else if (stroke == curColor && fillColor != curColor) {
+                    curStartCircle = d3.select(this);
+                }
+            }
+        }
+
+        //d          路径
+        // curColor  当前颜色
+        //translate  平移(数组)
+        //rotate     旋转角度
+        //opacity    透明度
+        //curID      当前容器ID
+        function drawWheel(d, curColor, translate, rotate, opacity, curID) {
+            d3.select("#" + curID).append("path").attr("d", d).attr("stroke", curColor)
+                .attr("transform", "translate(" + translate + ") rotate(" + rotate + ")")
+                .attr("fill", "none").attr("opacity", opacity)
+                .attr("stroke-width", 3)
+                .attr("stroke-dasharray", 2)
+                .attr("stroke-dashoffset", 10);
+        }
+
+    </script>
+</head>
+<body style="background-color:black;">
+    <div style="width: 85%; height: 700px; background: url(time_bg.jpg) no-repeat; margin: 0 auto; margin-top: 40px;">
+        <svg width="100%" height="700">
+            <defs>
+                <clipPath id="svgRectPath">
+                    <rect x="0" y="0" height="700" width="1195"></rect>
+                </clipPath>
+            </defs>
+            <g clip-path="url(#svgRectPath)">
+                <text x="20" y="40" font-size="14" fill="#AFBB4B">我的时间我做主,就是这么任性</text>
+                <text x="20" y="65" font-size="16" fill="#AFBB4B">我是能拖的时间控件哦！能拖 能拖 能拖（重要的事情说三遍）</text>
+                <g id="sec">
+                    <circle cx="225" cy="400" r="135" fill="#262626" stroke="#323232" stroke-width="20"></circle>
+                    <circle cx="225" cy="400" r="110" fill="none" stroke="#323232" stroke-width="15"></circle>
+                    <circle cx="225" cy="400" r="81" fill="none" stroke="#323232" stroke-width="19"></circle>
+                </g>
+                <g id="min">
+                    <circle cx="510" cy="270" r="114" fill="#262626" stroke="#323232" stroke-width="16"></circle>
+                    <circle cx="510" cy="270" r="88" fill="none" stroke="#323232" stroke-width="15"></circle>
+                    <circle cx="510" cy="270" r="60" fill="none" stroke="#323232" stroke-width="17"></circle>
+                </g>
+                <g id="hour">
+                    <circle cx="740" cy="290" r="62" fill="#262626" stroke="#323232" stroke-width="14"></circle>
+                    <circle cx="740" cy="290" r="43" fill="none" stroke="#323232" stroke-width="12"></circle>
+                </g>
+                <line x1="194" y1="336" x2="490" y2="221" stroke="#84C7C0" stroke-width="3" stroke-dasharray="2" stroke-dashoffset="10" opacity="0.3"></line>
+                <line x1="253" y1="465" x2="533" y2="318" stroke="#84C7C0" stroke-width="3" stroke-dasharray="2" stroke-dashoffset="10" opacity="0.3"></line>
+                <line x1="510" y1="217" x2="743" y2="254" stroke="#AFBB4B" stroke-width="3" stroke-dasharray="2" stroke-dashoffset="10" opacity="0.4"></line>
+                <line x1="508" y1="323" x2="740" y2="326" stroke="#AFBB4B" stroke-width="3" stroke-dasharray="2" stroke-dashoffset="10" opacity="0.4"></line>
+                <g id="day">
+
+                </g>
+                <g id="mon">
+
+                </g>
+                <g id="year">
+
+                </g>
+            </g>
+        </svg>
+    </div>
+</body>
+</html>

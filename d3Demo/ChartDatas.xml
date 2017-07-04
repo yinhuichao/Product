@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Charts>
+  <YearAndQuarter CurrentAnnual="FY08" CurrentQuarter="FY09 Q2" AnnualType="patical" />
+  <ChartData Charttitle="Revenue">
+    <Datasegments>
+      <Datasegment Segmenttype="Microsoft">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="44.282" />
+          <Datapoint Valuetitle="FY07" Value="51.122" />
+          <Datapoint Valuetitle="FY08" Value="60.42" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="16.367" />
+          <Datapoint Valuetitle="FY08 Q3" Value="14.454" />
+          <Datapoint Valuetitle="FY08 Q4" Value="15.837" />
+          <Datapoint Valuetitle="FY09 Q1" Value="15.061" />
+          <Datapoint Valuetitle="FY09 Q2" Value="16.629" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Client">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="4.334" />
+          <Datapoint Valuetitle="FY08 Q3" Value="4.033" />
+          <Datapoint Valuetitle="FY08 Q4" Value="4.359" />
+          <Datapoint Valuetitle="FY09 Q1" Value="4.218" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.982" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Server and Tools">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.261" />
+          <Datapoint Valuetitle="FY08 Q3" Value="3.238" />
+          <Datapoint Valuetitle="FY08 Q4" Value="3.721" />
+          <Datapoint Valuetitle="FY09 Q1" Value="3.406" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.743" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Online Services Business">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.863" />
+          <Datapoint Valuetitle="FY08 Q3" Value="0.842" />
+          <Datapoint Valuetitle="FY08 Q4" Value="0.838" />
+          <Datapoint Valuetitle="FY09 Q1" Value="0.77" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.866" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Microsoft Business Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="4.815" />
+          <Datapoint Valuetitle="FY08 Q3" Value="4.731" />
+          <Datapoint Valuetitle="FY08 Q4" Value="5.267" />
+          <Datapoint Valuetitle="FY09 Q1" Value="4.949" />
+          <Datapoint Valuetitle="FY09 Q2" Value="4.876" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Entertainment and Devices Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.076" />
+          <Datapoint Valuetitle="FY08 Q3" Value="1.592" />
+          <Datapoint Valuetitle="FY08 Q4" Value="1.59" />
+          <Datapoint Valuetitle="FY09 Q1" Value="1.814" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.183" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="Operating Income (Loss)">
+    <Datasegments>
+      <Datasegment Segmenttype="Microsoft">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="16.38" />
+          <Datapoint Valuetitle="FY07" Value="18.438" />
+          <Datapoint Valuetitle="FY08" Value="22.271" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="6.453" />
+          <Datapoint Valuetitle="FY08 Q3" Value="4.29" />
+          <Datapoint Valuetitle="FY08 Q4" Value="5.679" />
+          <Datapoint Valuetitle="FY09 Q1" Value="5.999" />
+          <Datapoint Valuetitle="FY09 Q2" Value="5.939" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Client">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.386" />
+          <Datapoint Valuetitle="FY08 Q3" Value="3.133" />
+          <Datapoint Valuetitle="FY08 Q4" Value="3.272" />
+          <Datapoint Valuetitle="FY09 Q1" Value="3.273" />
+          <Datapoint Valuetitle="FY09 Q2" Value="2.946" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Server and Tools">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="1.154" />
+          <Datapoint Valuetitle="FY08 Q3" Value="1.081" />
+          <Datapoint Valuetitle="FY08 Q4" Value="1.372" />
+          <Datapoint Valuetitle="FY09 Q1" Value="1.146" />
+          <Datapoint Valuetitle="FY09 Q2" Value="1.489" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Online Services Business">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="-0.247" />
+          <Datapoint Valuetitle="FY08 Q3" Value="-0.227" />
+          <Datapoint Valuetitle="FY08 Q4" Value="-0.486" />
+          <Datapoint Valuetitle="FY09 Q1" Value="-0.479" />
+          <Datapoint Valuetitle="FY09 Q2" Value="-0.471" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Microsoft Business Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.185" />
+          <Datapoint Valuetitle="FY08 Q3" Value="3.126" />
+          <Datapoint Valuetitle="FY08 Q4" Value="3.356" />
+          <Datapoint Valuetitle="FY09 Q1" Value="3.302" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.14" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Entertainment and Devices Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.375" />
+          <Datapoint Valuetitle="FY08 Q3" Value="0.106" />
+          <Datapoint Valuetitle="FY08 Q4" Value="-0.172" />
+          <Datapoint Valuetitle="FY09 Q1" Value="0.178" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.151" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="Diluted Earnings Per Share">
+    <Datasegments>
+      <Datasegment Segmenttype="Microsoft">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="1.2" />
+          <Datapoint Valuetitle="FY07" Value="1.42" />
+          <Datapoint Valuetitle="FY08" Value="1.87" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.5" />
+          <Datapoint Valuetitle="FY08 Q3" Value="0.47" />
+          <Datapoint Valuetitle="FY08 Q4" Value="0.46" />
+          <Datapoint Valuetitle="FY09 Q1" Value="0.48" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.47" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="RETURN OF CASH TO SHAREHOLDERS">
+    <Datasegments>
+      <Datasegment Segmenttype="Share Buyback">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="19.749" />
+          <Datapoint Valuetitle="FY07" Value="27.113" />
+          <Datapoint Valuetitle="FY08" Value="12.424" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="4.081" />
+          <Datapoint Valuetitle="FY08 Q3" Value="1.02" />
+          <Datapoint Valuetitle="FY08 Q4" Value="4.975" />
+          <Datapoint Valuetitle="FY09 Q1" Value="5.966" />
+          <Datapoint Valuetitle="FY09 Q2" Value="2.234" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Total Dividends">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="3.585" />
+          <Datapoint Valuetitle="FY07" Value="3.847" />
+          <Datapoint Valuetitle="FY08" Value="4.075" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="1.023" />
+          <Datapoint Valuetitle="FY08 Q3" Value="1.02" />
+          <Datapoint Valuetitle="FY08 Q4" Value="0.998" />
+          <Datapoint Valuetitle="FY09 Q1" Value="1.157" />
+          <Datapoint Valuetitle="FY09 Q2" Value="1.156" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Dividends Per Share">
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY06" Value="0.35" />
+          <Datapoint Valuetitle="FY07" Value="0.4" />
+          <Datapoint Valuetitle="FY08" Value="0.44" />
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.11" />
+          <Datapoint Valuetitle="FY08 Q3" Value="0.11" />
+          <Datapoint Valuetitle="FY08 Q4" Value="0.11" />
+          <Datapoint Valuetitle="FY09 Q1" Value="0.13" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.13" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="Segment Revenue">
+    <Datasegments>
+      <Datasegment Segmenttype="Client">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="4.334" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.982" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Server and Tools">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.261" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.743" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Online Services Business">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.863" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.866" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Microsoft Business Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="4.815" />
+          <Datapoint Valuetitle="FY09 Q2" Value="4.876" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Entertainment and Devices Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.076" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.183" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Unallocated">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.018" />
+          <Datapoint Valuetitle="FY09 Q2" Value="-0.021" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="Segment Operating Income (Loss)">
+    <Datasegments>
+      <Datasegment Segmenttype="Client">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.386" />
+          <Datapoint Valuetitle="FY09 Q2" Value="2.946" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Server and Tools">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="1.154" />
+          <Datapoint Valuetitle="FY09 Q2" Value="1.489" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Online Services Business">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="-0.247" />
+          <Datapoint Valuetitle="FY09 Q2" Value="-0.471" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Microsoft Business Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="3.185" />
+          <Datapoint Valuetitle="FY09 Q2" Value="3.14" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Entertainment and Devices Division">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="0.375" />
+          <Datapoint Valuetitle="FY09 Q2" Value="0.151" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Unallocated">
+        <Datapoints Type="Annual">
+        </Datapoints>
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="-1.4" />
+          <Datapoint Valuetitle="FY09 Q2" Value="-1.316" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+  <ChartData Charttitle="Revenue vs Operating Income (Loss)">
+    <Datasegments>
+      <Datasegment Segmenttype="Revenue">
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="16.367" />
+          <Datapoint Valuetitle="FY09 Q2" Value="16.629" />
+        </Datapoints>
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY07" Value="51.122" />
+          <Datapoint Valuetitle="FY08" Value="60.42" />
+        </Datapoints>
+      </Datasegment>
+      <Datasegment Segmenttype="Operating Income (Loss)">
+        <Datapoints Type="Quarterly">
+          <Datapoint Valuetitle="FY08 Q2" Value="6.453" />
+          <Datapoint Valuetitle="FY09 Q2" Value="5.939" />
+        </Datapoints>
+        <Datapoints Type="Annual">
+          <Datapoint Valuetitle="FY07" Value="18.438" />
+          <Datapoint Valuetitle="FY08" Value="22.271" />
+        </Datapoints>
+      </Datasegment>
+    </Datasegments>
+  </ChartData>
+</Charts>
+

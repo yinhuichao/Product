@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="js/jquery1.7.2.js"></script>
+    <script src="js/d3.js"></script>
+    <script src="js/trended.js"></script>
+    <style>
+        .glass {
+            background-color: transparent;
+            -webkit-box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            -moz-box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            box-shadow: 0 0 8px rgba(126,126,126,.6),inset 0 0 20px rgba(255,255,255,1);
+            z-index: 10;
+            position: absolute;
+            display: none;
+        }
+
+        .htmlSlider {
+            position: absolute;
+            z-index: 11;
+            -webkit-border-radius: 1px;
+            -moz-border-radius: 1px;
+            border-radius: 1px;
+            -webkit-box-shadow: 0 2px 4px rgba(126,126,126,.3);
+            -moz-box-shadow: 0 2px 4px rgba(126,126,126,.3);
+            box-shadow: 0 2px 4px rgba(126,126,126,.3);
+            border: solid 1px rgb(222,222,222);
+            cursor: pointer;
+            background-color: white;
+        }
+    </style>
+    
+</head>
+<body>
+    <div style="margin:0 auto;width:85%;height:auto;">
+        <div style="float:left;width:18%;border:1px solid gray;height:800px;"><h3>left</h3></div>
+        <div style="float:left;width:59.6%;height:auto;">
+            <article style="width: auto; padding: 0px 10px 0px 10px; margin-top: 35px;">
+                <div style="overflow:hidden;">
+                    <div style="width:25%;float:left;">
+                        <svg id="svg1" width="140" height="230" style="background-color:white;float:left;-webkit-tap-highlight-color:rgba(0,0,0,0);">
+                            <g>
+                                <rect width="140" height="230" x="0" y="0" fill="white"></rect>
+                                <text x="2" y="15" font-size="12">QUARTERLY INCOME</text>
+                                <text x="2" y="30" font-size="12">STATEMENTS</text>
+                                <text x="2" y="45" font-size="11">(in billions,except EPS)</text>
+
+                                <g class="checkbox" cursor="pointer">
+                                    <rect x="0" y="128" width="140" height="25" fill="white"></rect>
+                                    <g display="none" pointer-events="none" class="chkHover">
+                                        <line x1="0" y1="128" x2="140" y2="128" stroke="#eee" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="128" x2="0" y2="152" stroke="#cecece" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="152" x2="140" y2="152" stroke="#aeaeae" stroke-width="0.5" fill="none"></line>
+                                    </g>
+
+                                    <rect x="6" y="130" height="20" width="20" fill="#ff8c00" stroke="none" class="chk1"></rect>
+                                    <rect x="12" y="136" height="8" width="8" fill="white" stroke="none" class="chk2"></rect>
+                                    <text x="32" y="145" font-size="11" pointer-events="none">Revenue</text>
+                                </g>
+                                <g class="checkbox" cursor="pointer">
+                                    <rect x="0" y="158" width="140" height="24" fill="white"></rect>
+                                    <g display="none" pointer-events="none" class="chkHover">
+                                        <line x1="0" y1="158" x2="140" y2="158" stroke="#eee" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="158" x2="0" y2="182" stroke="#cecece" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="182" x2="140" y2="182" stroke="#aeaeae" stroke-width="0.5" fill="none"></line>
+                                    </g>
+
+                                    <rect x="6" y="160" height="20" width="20" fill="#7fba00" stroke="none" class="chk1"></rect>
+                                    <rect x="12" y="166" height="8" width="8" fill="white" stroke="none" class="chk2"></rect>
+                                    <text x="32" y="175" font-size="11" pointer-events="none">Gross Margin</text>
+                                </g>
+                                <g class="checkbox" cursor="pointer">
+                                    <rect x="0" y="188" width="140" height="24" fill="white"></rect>
+                                    <g display="none" pointer-events="none" class="chkHover">
+                                        <line x1="0" y1="188" x2="140" y2="188" stroke="#eee" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="188" x2="0" y2="212" stroke="#cecece" stroke-width="0.3" fill="none"></line>
+                                        <line x1="0" y1="212" x2="140" y2="212" stroke="#aeaeae" stroke-width="0.5" fill="none"></line>
+                                    </g>
+
+                                    <rect x="6" y="190" height="20" width="20" fill="#68217a" stroke="none" class="chk1"></rect>
+                                    <rect x="12" y="196" height="8" width="8" fill="white" stroke="none" class="chk2"></rect>
+                                    <text x="32" y="198" font-size="11" pointer-events="none">Diluted Earnings Per</text>
+                                    <text x="32" y="210" font-size="11" pointer-events="none">Share</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="cellRightDiv" style="width:74%;float:left;">
+                        <svg id="svg2" width="430" height="230" style="background-color:white;float:left;-webkit-tap-highlight-color:rgba(0,0,0,0);">
+                            <g>
+                                <rect x="0" y="0" width="430" height="230" fill="white"></rect>
+                                <defs>
+                                    <clipPath id="clip">
+                                        <rect x="39" y="40" width="352" height="186"></rect>
+                                    </clipPath>
+                                </defs>
+                                <g id="sliderBar" cursor="pointer">
+                                    <rect x="39" y="5" width="352" height="30" fill="white"></rect>
+                                    <rect x="39" y="17" width="352" height="7" stroke="gray" stroke-width="0.3" fill="#fdfdfd"></rect>
+                                </g>
+                                <g id="slider" cursor="pointer">
+                                    <g id="sliRects">
+                                        <rect id="sliRect1" x="38" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect2" x="83" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect3" x="127" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect4" x="171" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect5" x="215" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect6" x="259" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect7" x="303" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                        <rect id="sliRect8" x="348" y="8" width="44" height="24" fill="white" fill-opacity="0"></rect>
+                                    </g>
+                                    <rect id="sliRect" x="38" y="8" width="44" height="24" fill="white" stroke="gray" stroke-width="0.3"></rect>
+                                    <text id="sliText" pointer-events="none" x="61" y="25" font-size="11" font-weight="bold" text-anchor="middle">Q2-12&sup3;</text>
+                                </g>
+                                <g id="leftSlider">
+                                    <rect x="15" y="10" width="20" height="20" stroke="gray" stroke-width="0.3" fill="#fdfdfd"></rect>
+                                    <path d="M10,10L12,8L12,12L10,10" fill="gray" transform="scale(3) translate(-3,-3)"></path>
+                                </g>
+                                <g id="rightSlider">
+                                    <rect x="395" y="10" width="20" height="20" stroke="gray" stroke-width="0.3" fill="#fdfdfd"></rect>
+                                    <path d="M10,10L12,8L12,12L10,10" fill="gray" transform="scale(3) translate(146,17) rotate(180)"></path>
+                                </g>
+                                <!--横线-->
+                                <g>
+                                    <line x1="0" y1="40" x2="430" y2="40" stroke="gray" stroke-width="0.5"></line>
+                                    <line x1="39" y1="68" x2="391" y2="68" stroke="gray"></line>
+                                    <line x1="39" y1="96" x2="391" y2="96" stroke="gray"></line>
+                                    <line x1="39" y1="124" x2="391" y2="124" stroke="gray"></line>
+                                    <line x1="39" y1="152" x2="391" y2="152" stroke="gray"></line>
+                                    <line x1="39" y1="180" x2="391" y2="180" stroke="gray"></line>
+                                    <line x1="39" y1="208" x2="391" y2="208" stroke="gray"></line>
+                                    <line x1="0" y1="226" x2="430" y2="226" stroke="gray" stroke-width="0.5"></line>
+                                </g>
+                                <!--竖线-->
+                                <g>
+                                    <line x1="39" y1="40" x2="39" y2="226" stroke="#aeaeae" stroke-width="0.3"></line>
+                                    <line x1="391" y1="40" x2="391" y2="226" stroke="#aeaeae" stroke-width="0.3"></line>
+                                </g>
+                                <!--左坐标-->
+                                <g>
+                                    <text x="18" y="70" font-size="13" font-weight="bold" text-anchor="middle">$30</text>
+                                    <text x="18" y="98" font-size="13" font-weight="bold" text-anchor="middle">$24</text>
+                                    <text x="18" y="126" font-size="13" font-weight="bold" text-anchor="middle">$18</text>
+                                    <text x="18" y="154" font-size="13" font-weight="bold" text-anchor="middle">$12</text>
+                                    <text x="18" y="182" font-size="13" font-weight="bold" text-anchor="middle">$6</text>
+                                    <text x="18" y="210" font-size="13" font-weight="bold" text-anchor="middle">$0</text>
+                                </g>
+                                <!--右坐标-->
+                                <g>
+                                    <text x="411" y="70" font-size="13" font-weight="bold" text-anchor="middle">$0.76</text>
+                                    <text x="411" y="98" font-size="13" font-weight="bold" text-anchor="middle">$0.57</text>
+                                    <text x="411" y="126" font-size="13" font-weight="bold" text-anchor="middle">$0.38</text>
+                                    <text x="411" y="154" font-size="13" font-weight="bold" text-anchor="middle">$0.19</text>
+                                    <text x="411" y="182" font-size="13" font-weight="bold" text-anchor="middle">$0.00</text>
+                                    <text x="411" y="210" font-size="13" font-weight="bold" text-anchor="middle">$-0.19</text>
+                                </g>
+                                <g class="leftHover" display="none" pointer-events="none">
+                                    <line x1="0" y1="39" x2="41" y2="39" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                    <line x1="40" y1="40" x2="40" y2="226" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                    <line x1="0" y1="227" x2="41" y2="227" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                </g>
+                                <g class="rightHover" display="none" pointer-events="none">
+                                    <line x1="389" y1="39" x2="430" y2="39" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                    <line x1="390" y1="40" x2="390" y2="226" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                    <line x1="389" y1="227" x2="430" y2="227" fill="none" stroke="#aeaeae" stroke-width="2" opacity="0.5"></line>
+                                </g>
+                                <!--3 lines-->
+                                <g clip-path="url(#clip)">
+                                    <g id="line1" class="line">
+                                        <g class="path">
+                                            <path id="path1" d="" fill="none" stroke="#68217a" stroke-width="3"></path>
+                                            <path id="hidePath1" opacity="0" d="" fill="white" fill-opacity="0" stroke="white" stroke-width="30"></path>
+                                            <path id="shadow1" class="shadow" d="" fill="none" stroke="#cecece" stroke-width="3" transform="translate(0,4)"></path>
+                                        </g>
+                                        <g id="shadowPoint1" display="none" class="shadowPoints" fill="#aeaeae"></g>
+                                        <g id="points1" display="none" class="points" transform="translate(0,-10)" fill="#68217a"></g>
+                                    </g>
+                                    <g id="line2" class="line">
+                                        <g class="path">
+                                            <path id="path2" d="" fill="none" stroke="#ff8c00" stroke-width="3"></path>
+                                            <path id="hidePath2" opacity="0" d="" fill="white" fill-opacity="0" stroke="white" stroke-width="30"></path>
+                                            <path id="shadow2" class="shadow" d="" fill="none" stroke="#cecece" stroke-width="3" transform="translate(0,4)"></path>
+                                        </g>
+                                        <g id="shadowPoint2" display="none" class="shadowPoints" fill="#aeaeae"></g>
+                                        <g id="points2" display="none" class="points" transform="translate(0,-10)" fill="#ff8c00"></g>
+                                    </g>
+                                    <g id="line3" class="line">
+                                        <g class="path">
+                                            <path id="path3" d="" fill="white" fill-opacity="0.1" stroke="#7fba00" stroke-width="3"></path>
+                                            <path id="hidePath3" opacity="0" d="" fill="white" fill-opacity="0" stroke="white" stroke-width="30"></path>
+                                            <path id="shadow3" class="shadow" d="" fill="white" fill-opacity="0.1" stroke="#cecece" stroke-width="3" transform="translate(0,4)"></path>
+                                        </g>
+                                        <g id="shadowPoint3" display="none" class="shadowPoints" fill="#aeaeae"></g>
+                                        <g id="points3" display="none" class="points" transform="translate(0,-10)" fill="#7fba00"></g>
+                                    </g>
+                                </g>
+
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div style="overflow:hidden;">
+                    <div class="cellLeftDiv" style="width:26%;float:left;">
+                        <svg id="svg3" width="150" height="660" style="background-color:white;float:left;">
+                            <g font-size="11" font-weight="normal">
+                                <rect x="0" y="0" width="150" height="660" fill="white"></rect>
+                                <text x="0" y="25">(in millions,except EPS)</text>
+                                <line x1="0" y1="35" x2="145" y2="35" stroke="gray" stroke-width="0.5"></line>
+                                <text x="0" y="50">Revenue</text>
+                                <text x="0" y="70">Cost of revenue</text>
+                                <text x="15" y="90">Gross margin</text>
+                                <text x="0" y="110">Research and development</text>
+                                <text x="0" y="130">Sales and marketing</text>
+                                <text x="0" y="150">General and administrative</text>
+                                <text x="0" y="170">Goodwill impairment</text>
+                                <text x="0" y="190">Integration and restructuring</text>
+                                <text x="0" y="210">Other expenses (income)</text>
+                                <text x="0" y="230">Operating income</text>
+                                <text x="0" y="250">Other income (expense), net</text>
+                                <text x="0" y="270">General and administrative</text>
+                                <text x="0" y="290">Goodwill impairment</text>
+                                <text x="0" y="310">Integration and restructuring</text>
+                                <text x="0" y="330">Other expenses (income)</text>
+                                <text x="0" y="350">Operating income (expense), net</text>
+                                <text x="0" y="370">Other income</text>
+                                <text x="0" y="390">Operating income</text>
+                                <text x="0" y="410">Other income (expense), net</text>
+                                <text x="0" y="430">General and administrative</text>
+                                <text x="0" y="450">Goodwill impairment common</text>
+                                <text x="0" y="470">change common</text>
+                                <text x="0" y="490">Other expenses (income)</text>
+                                <text x="0" y="510">change</text>
+                                <text x="0" y="530">Other income</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="cellRightDiv" style="width:73%;float:left;">
+                        <svg id="svg4" width="360" height="660" style="background-color:white;float:left; margin-left:8%;" class="data_matrix">
+                            <g font-size="11">
+                                <rect x="0" y="0" width="360" height="660" fill="white"></rect>
+                                <defs>
+                                    <clipPath id="clip4">
+                                        <rect x="0" y="0" width="348" height="660"></rect>
+                                    </clipPath>
+                                </defs>
+                                <line x1="0" y1="35" x2="348" y2="35" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="75" x2="348" y2="75" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="215" x2="348" y2="215" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="275" x2="348" y2="275" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="315" x2="348" y2="315" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="435" x2="348" y2="435" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="455" x2="348" y2="455" stroke="gray" stroke-width="0.5"></line>
+                                <line x1="0" y1="535" x2="348" y2="535" stroke="gray" stroke-width="0.5"></line>
+                                <g clip-path="url(#clip4)">
+                                    <g id="head" font-weight="bold" text-anchor="middle">
+                                    </g>
+                                    <g id="valueText" text-anchor="end">
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="glass" id="glass" style="width: 40px; left: 190px; top: 30px; height: 800px; "></div>
+            </article>
+        </div>
+        <div style="float: left; width: 18%; border: 1px solid gray; height: 800px;">
+            <h3>right</h3>
+        </div>
+    </div>
+</body>
+</html>

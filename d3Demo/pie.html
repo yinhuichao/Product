@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>饼状图</title>
+    <script src="./js/jquery1.7.2.js"></script>
+    <script src="./js/d3.js" charset="utf-8"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/ircharts.js"></script>
+    <script>
+        $(function () {
+            IR.ChartView({
+                chartType: "pie",
+                renderTo: "div1",
+                title: "SEGMENT REVENUE",
+                subTitle: "(In billions)",
+                width: 400,
+                height: 420,
+                titleHeight: 35,
+                barHeight: 21,
+                footHeight: 152,
+                bar1Label: "Quarterly",
+                bar2Label: "Year To Date",
+                annualText: ["FY15", "FY14"],
+                quarterlyText: ["Q115", "Q114"],
+                annualValue: [5, 8.5, 20, 13.9, 29],
+                annualValue1: [12.3, 15, 20, 6.5, 6, 33],
+                quarterlyValue: [8, 6.9, 13.3, 22, 12, 20],
+                quarterlyValue1: [22, 6, 8, 53, 8],
+                color: ["#FF8C00", "#7FBA00", "#007233", "#68217A", "#0072C6", "#00B294"]
+            });
+        })
+    </script>
+</head>
+<body style="background-color: darkgreen; font-family: 'Segoe UI';">
+    <a href="index.html" style="color:white;">返回</a><br />
+    <div id="div1"></div>
+</body>
+</html>
