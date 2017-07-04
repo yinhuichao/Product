@@ -1,0 +1,297 @@
+*{
+    box-sizing: border-box;
+}
+body {
+    /*padding: 6px;*/
+    margin: 0px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/*共有样式*/
+.title_top {
+    /*border-left: 1px solid #c6c6c6;
+    border-right: 1px solid #c6c6c6;
+    border-radius: 5px;
+    background-image: url('../images/bg_title.jpg');
+    background-repeat: repeat-x;
+    margin: 0px 20px;
+    padding: 10px 5px;*/
+
+    position: relative;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    z-index: 1000;
+    padding: 10px 35px 10px 50px;
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f4dcb5 0%, #d8b58b 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4dcb5), color-stop(100%,#d8b58b)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f4dcb5 0%,#d8b58b 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f4dcb5 0%,#d8b58b 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f4dcb5 0%,#d8b58b 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f4dcb5 0%,#d8b58b 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4dcb5', endColorstr='#d8b58b',GradientType=0 ); /* IE6-9 */
+}
+
+button {
+    background-color: transparent;
+    border: 0px;
+    border-radius: 3px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn_mode {
+    background-image: url('./images/btn_mode.png');
+    width: 100px;
+    height: 30px;
+    background-repeat: no-repeat;
+}
+
+.btn_mode:hover {
+    background-image: url('./images/btn_hover.png');
+}
+
+.btn_compare {
+    background-image: url('./images/btn_compare.png');
+    width: 100px;
+    height: 30px;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+.btn_add_company {
+    border: 1px solid #CFCFCF;
+    background-color: #ffffff;
+    width: 100px;
+    height: 30px;
+}
+
+span.btn_act {
+    margin-left: 20px;
+    vertical-align: middle;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+span.btn_down {
+    background-image: url('./images/btn_down.png');
+}
+
+span.btn_print {
+    background-image: url('./images/btn_print.png');
+}
+
+input.input_date {
+    line-height: 24px;
+    border: 1px solid #c6c6c6;
+    border-radius: 3px;
+    width: 100px;
+    text-align: center;
+}
+
+select.select_nomal {
+    height: 24px;
+    width: 80px;
+}
+
+select.select_nomal option {
+    height: 20px;
+    line-height: 24px;
+}
+
+span.del_ico {
+    vertical-align: middle;
+
+    background-image: url("");
+    background-color: orangered;
+    color: #ffffff;
+    /*display: inline-block;*/
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 3px 4px 3px 4px;
+}
+
+.title_top .act_container {
+    margin-right: 15px;
+    float: right;
+}
+
+.table_container {
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #c6c6c6;
+}
+
+.table_container .table_list {
+    border-spacing: 0;
+    width: 100%;
+    line-height: 30px;
+}
+
+.table_container .line_height20 {
+    line-height: 20px;
+}
+
+.table_container .table_list th {
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 1px solid #c6c6c6;
+    border-right: 1px solid #c6c6c6;
+    text-align: center;
+}
+
+.table_container .table_list th:last-child {
+    border-right: 0px;
+}
+
+.table_container .table_list td {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    border-bottom: 1px solid #c6c6c6;
+    border-right: 1px solid #c6c6c6;
+}
+
+.table_container .table_list td:last-child {
+    border-right: 0px;
+}
+
+.table_container .table_list tr:last-child td {
+    border-bottom: 0px;
+}
+
+.table_container .table_list td.padding_left {
+    text-align: left;
+    padding-left: 30px;
+}
+.table_container .table_list td.maxCount{
+    color: #ff0000;
+}
+
+/*分析页面*/
+.analysis {
+    margin: 0px;
+    padding: 0px;
+}
+
+.analysis input.input_search {
+    line-height: 24px;
+    border: 1px solid #c6c6c6;
+    border-radius: 3px;
+}
+
+.analysis .content_container {
+    line-height: 30px;
+    margin: 15px 50px;
+}
+
+.analysis .content_container .search_load_more {
+    margin-top: 10px;
+    line-height: 35px;
+    background-color: lightskyblue;
+    text-align: center;
+    border-radius: 3px;
+}
+
+.analysis .content_container .search_load_more span.more {
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/*分析页面*/
+.compare {
+    margin: 0px;
+    padding: 0px;
+}
+
+.compare .content {
+   width:0px;
+    margin: 20px 10px 0px 10px;
+    border-top: 1px solid #c6c6c6;
+}
+
+.compare .content .compare_left {
+    float: left;
+    width: 50%;
+    border-right: 1px solid #c6c6c6;
+    min-height: 800px;
+}
+
+.compare .content .compare_right {
+    float: left;
+    width: 49%;
+    min-height: 800px;
+}
+
+.compare .content .block_container {
+    margin: 20px auto;
+    width: 70%;
+}
+
+.compare .content .block_search {
+    line-height: 30px;
+    margin-bottom: 20px;
+}
+
+.compare .content .block_title {
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.compare .content .block_title span.ico {
+    vertical-align: middle;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: blue;
+    border-radius: 50%;
+}
+
+.compare .content .block_content {
+    border-radius: 5px;
+    /*background-color:  #c6c6c6;*/
+    border: 1px solid #c6c6c6;
+    min-height: 350px;
+    padding: 1px;
+}
+
+/*对比*/
+.compare .content .compare_company {
+    width: 600px;
+    border-right: 1px solid #c6c6c6;
+    float: left;
+}
+.compare .content .compare_company:last-child
+{
+    border-right: 0px;
+}
+.modal_body
+{
+    padding: 10px 0px;
+    border:1px solid lightgray;
+    border-radius: 3px;
+    min-height: 25px;
+}
+span.compare_com
+{
+    padding: 3px;
+    margin: 3px;
+    border:1px solid lightgray;
+    border-radius: 2px;
+    display: inline-block;
+    cursor: pointer;
+}
